@@ -1,46 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:humble_time_app/core/localization/humble_localizations.dart' as core_localization;
+//import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 import 'package:humble_time_app/core/services/voice_service.dart';
-//import 'package:humble_time_app/core/models/user_settings.dart';
-import 'package:humble_time_app/features/scheduler/widgets/schedule_block.dart';
+import 'package:humble_time_app/models/time_block.dart';
+import 'package:humble_time_app/models/user_settings.dart';
 
-List<ScheduleBlock> generateDynamicBlocks(BuildContext context, UserSettings userSettings) {
-  final localizations = core_localization.HumbleLocalizations.of(context);
-  final List<ScheduleBlock> blocks = [];
+List<TimeBlock> generateTimeBlocks(UserSettings userSettings) {
+  final List<TimeBlock> blocks = [];
 
-  final blockConfigs = [
-    {
-      "title": localizations.focusBlockTitle,
-      "duration": Duration(minutes: userSettings.focusBlockDuration),
-      "blockColor": Colors.blue,
-      "taskType": TaskType.focus,
-      "voicePrompt": localizations.voiceFocusStart,
-    },
-    {
-      "title": localizations.breakBlockTitle,
-      "duration": Duration(minutes: userSettings.breakBlockDuration),
-      "blockColor": Colors.green,
-      "taskType": TaskType.breakTime,
-      "voicePrompt": localizations.voiceBreakStart,
-    },
-  ];
+  for (int i = 0; i < userSettings.blockCount; i++) {
+    blocks.add(TimeBlock(
+      label: 'Focus',
+      duration: userSettings.focusBlockDuration,
+      isBreak: false,
+    ));
 
-  for (final config in blockConfigs) {
-    blocks.add(
-      ScheduleBlock(
-        title: config["title"] as String,
-        duration: config["duration"] as Duration,
-        blockColor: config["blockColor"] as Color,
-        taskType: config["taskType"] as TaskType,
-        enableVoiceNudge: userSettings.voiceNudgeEnabled,
-        onStart: () {
-          if (userSettings.voiceNudgeEnabled) {
-            VoiceService.speak(config["voicePrompt"] as String);
-          }
-        },
-      ),
-    );
+    if (i < userSettings.blockCount - 1) {
+      blocks.add(TimeBlock(
+        label: 'Break',
+        duration: userSettings.breakBlockDuration,
+        isBreak: true,
+      ));
+    }
   }
+
+  VoiceService.speak('Generated ${blocks.length} blocks');
 
   return blocks;
 }

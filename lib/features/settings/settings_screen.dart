@@ -11,30 +11,26 @@ class SettingsScreen extends StatelessWidget {
     final settings = settingsProvider.settings;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.all(20.0),
         children: [
-          const Text(
-            'Accessibility & Preferences',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          const Text('Accessibility & Preferences',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
 
           SwitchListTile(
             title: const Text('Enable Voice Nudges'),
             subtitle: const Text('Gentle auditory reminders for pacing'),
             value: settings.enableVoiceNudge,
-            onChanged: (value) => settingsProvider.toggleVoiceNudge(value),
+            onChanged: (val) =>
+                settingsProvider.toggleVoiceNudge(val),
+            secondary: const Icon(Icons.volume_up),
           ),
 
-          const SizedBox(height: 20),
-          const Text(
-            'Default Block Duration',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          const Divider(height: 40),
+          const Text('Default Block Duration',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           DropdownButton<Duration>(
             value: settings.defaultBlockDuration,
@@ -42,24 +38,20 @@ class SettingsScreen extends StatelessWidget {
               const Duration(minutes: 25),
               const Duration(minutes: 45),
               const Duration(minutes: 60),
-            ].map((duration) {
-              return DropdownMenuItem(
-                value: duration,
-                child: Text('${duration.inMinutes} minutes'),
-              );
-            }).toList(),
-            onChanged: (newDuration) {
-              if (newDuration != null) {
-                settingsProvider.setDefaultDuration(newDuration);
+            ].map((duration) => DropdownMenuItem(
+                  value: duration,
+                  child: Text('${duration.inMinutes} minutes'),
+                )).toList(),
+            onChanged: (duration) {
+              if (duration != null) {
+                settingsProvider.updateDefaultDuration(duration);
               }
             },
           ),
 
-          const SizedBox(height: 30),
-          const Text(
-            'Appearance',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+          const Divider(height: 40),
+          const Text('Appearance',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           DropdownButton<Brightness>(
             value: settings.preferredBrightness,
@@ -74,9 +66,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ],
             onChanged: (newBrightness) {
-              if (newBrightness != null) {
-                settingsProvider.setPreferredBrightness(newBrightness);
-              }
+              settingsProvider.setPreferredBrightness(newBrightness!);
             },
           ),
         ],

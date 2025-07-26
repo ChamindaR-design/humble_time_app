@@ -11,7 +11,8 @@ import 'package:humble_time_app/features/scheduler/scheduler_screen.dart' as sch
 import 'package:humble_time_app/features/settings/settings_screen.dart';
 
 import 'package:humble_time_app/core/themes/humble_theme.dart';
-import 'package:humble_time_app/core/localization/humble_localizations.dart';
+import 'package:humble_time_app/l10n/humble_localizations.dart';
+
 import 'package:humble_time_app/core/services/voice_service.dart';
 import 'package:humble_time_app/core/providers/user_settings_provider.dart' as core;
 import 'package:humble_time_app/models/time_log_entry.dart';

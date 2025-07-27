@@ -1,4 +1,4 @@
-//import 'package:humble_time_app/core/providers/user_settings_provider.dart';
+import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/core/services/voice_service.dart';
 import 'package:humble_time_app/models/time_block.dart';
 import 'package:humble_time_app/models/user_settings.dart';
@@ -13,6 +13,10 @@ List<TimeBlock> generateTimeBlocks(UserSettings userSettings) {
       isBreak: false,
     ));
 
+    if (i == 0) {
+      VoiceService.speak(PromptLibrary.forEvent('startBlock')); // ✅ Static call
+    }
+
     if (i < userSettings.blockCount - 1) {
       blocks.add(TimeBlock(
         label: 'Break',
@@ -22,7 +26,7 @@ List<TimeBlock> generateTimeBlocks(UserSettings userSettings) {
     }
   }
 
-  VoiceService.speak('Generated ${blocks.length} blocks');
+  VoiceService.speak('Generated ${blocks.length} blocks'); // ✅ Static call
 
   return blocks;
 }

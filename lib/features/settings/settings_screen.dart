@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import 'package:humble_time_app/core/providers/user_settings_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends StatelessWidget {
+
+/*class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<UserSettingsProvider>(context);
+    final settings = settingsProvider.settings;
+
+    return Scaffold(*/
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsProvider = ref.watch(userSettingsProvider);
     final settings = settingsProvider.settings;
 
     return Scaffold(

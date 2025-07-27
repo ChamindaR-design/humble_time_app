@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   provider: ^6.0.0
+  flutter_riverpod: ^2.3.6 # or latest
+  go_router: ^13.1.0 # or latest version
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +31,15 @@ flutter:
   generate: true
   assets:
     - lib/l10n/
+    - lib/assets/fonts/OpenSans-Regular.ttf
+    - lib/assets/fonts/OpenSans-Bold.ttf
+
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: lib/assets/fonts/OpenSans-Regular.ttf
+        - asset: lib/assets/fonts/OpenSans-Bold.ttf
+          weight: 700
 
   # Optional image assets or font customization go here:
   # assets:

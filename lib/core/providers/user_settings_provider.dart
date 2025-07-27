@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:humble_time_app/models/user_settings.dart';
 
 class UserSettingsProvider with ChangeNotifier {
-  final UserSettings _settings = UserSettings();
+  final UserSettings _settings = UserSettings(); // <-- this is missing
 
   UserSettings get settings => _settings;
 
@@ -32,3 +33,6 @@ class UserSettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+final userSettingsProvider = ChangeNotifierProvider<UserSettingsProvider>((ref) {
+  return UserSettingsProvider();
+});

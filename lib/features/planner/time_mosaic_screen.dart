@@ -16,24 +16,24 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
   @override
   void initState() {
     super.initState();
-    voice.speak(PromptLibrary.forEvent('welcomeBack'));
+    VoiceService.speak(PromptLibrary.forEvent('welcomeBack'));
   }
 
   void onStartBlock() {
-    voice.speak(PromptLibrary.forEvent('startBlock'));
+    VoiceService.speak(PromptLibrary.forEvent('startBlock'));
   }
 
   void onCompleteBlock() {
-    voice.speak(PromptLibrary.forEvent('completeBlock'));
+    VoiceService.speak(PromptLibrary.forEvent('completeBlock'));
   }
 
   void onIdleDetected() {
-    voice.speak(PromptLibrary.forEvent('idleDetected'));
+    VoiceService.speak(PromptLibrary.forEvent('idleDetected'));
   }
 
   @override
   void dispose() {
-    voice.stop();
+    VoiceService.stop();
     super.dispose();
   }
 

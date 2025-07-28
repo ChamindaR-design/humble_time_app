@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:humble_time_app/core/themes/app_theme.dart';
-import 'package:humble_time_app/core/services/voice_service.dart';
+import 'package:humble_time_app/services/voice_service.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/core/navigation/go_router.dart';
 import 'package:humble_time_app/core/providers/theme_provider.dart';

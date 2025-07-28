@@ -1,5 +1,5 @@
 import 'package:humble_time_app/helpers/prompt_library.dart';
-import 'package:humble_time_app/core/services/voice_service.dart';
+import 'package:humble_time_app/services/voice_service.dart';
 import 'package:humble_time_app/models/time_block.dart';
 import 'package:humble_time_app/models/user_settings.dart';
 

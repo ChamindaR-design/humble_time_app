@@ -1,4 +1,20 @@
 class PromptLibrary {
+  /// Returns a voice prompt string based on the route path.
+  static String forRoute(String route) {
+    switch (route) {
+      case '/':
+        return 'Welcome home. Let’s begin tracking.';
+      case '/schedule':
+        return 'Opening your schedule overview.';
+      case '/mood':
+        return 'Let’s reflect on how you’re feeling.';
+      case '/settings':
+        return 'Adjusting your preferences.';
+      default:
+        return 'Navigating to a new section.';
+    }
+  }
+
   /// Returns a voice prompt string based on the event key and optional parameter.
   static String forEvent(String eventKey, {String? param}) {
     switch (eventKey) {
@@ -31,4 +47,5 @@ class PromptLibrary {
     }
   }
 }
+
 

@@ -10,7 +10,7 @@ class LogScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(local.logHistory), // Localized title
+        title: Text(local.logHistory),
       ),
       body: const Center(
         child: Text('Log screen coming soon!'),

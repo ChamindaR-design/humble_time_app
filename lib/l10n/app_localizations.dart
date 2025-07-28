@@ -120,6 +120,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time for a break'**
   String get voiceBreakStart;
+
+  /// No description provided for @mood.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get mood;
+
+  /// No description provided for @timeMosaicPlanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Mosaic Planner'**
+  String get timeMosaicPlanner;
+
+  /// No description provided for @appTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Humble Time Tracker'**
+  String get appTitle;
+
+  /// No description provided for @logHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Log History'**
+  String get logHistory;
+
+  /// No description provided for @actuals.
+  ///
+  /// In en, this message translates to:
+  /// **'Actuals'**
+  String get actuals;
+
+  /// No description provided for @pacing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pacing'**
+  String get pacing;
+
+  /// No description provided for @scheduler.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduler'**
+  String get scheduler;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

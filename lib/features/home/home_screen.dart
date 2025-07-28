@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:humble_time_app/l10n/humble_localizations.dart'; // Adjust this import if needed
+import 'package:humble_time_app/l10n/humble_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -19,32 +19,43 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.history),
               label: Text(local.logHistory),
-              //onPressed: () => context.go('/log'),
               onPressed: () => context.push('/log'),
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.check_circle),
               label: Text(local.actuals),
-              //onPressed: () => context.go('/actuals'),
               onPressed: () => context.push('/actuals'),
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.timelapse),
               label: Text(local.pacing),
-              //onPressed: () => context.go('/pacing'),
               onPressed: () => context.push('/pacing'),
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.calendar_today),
               label: Text(local.scheduler),
-              //onPressed: () => context.go('/scheduler'),
               onPressed: () => context.push('/scheduler'),
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.settings),
               label: Text(local.settings),
-              //onPressed: () => context.go('/settings'),
               onPressed: () => context.push('/settings'),
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.mood),
+              label: Text(local.mood),
+              /*onPressed: () {
+                Navigator.pushNamed(context, '/mood');*
+              },*/
+              onPressed: () => context.push('/mood'),  
+            ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.schedule),
+              label: Text(local.timeMosaicPlanner),
+              /*onPressed: () {
+                Navigator.pushNamed(context, '/time-mosaic-planner');
+              },*/
+              onPressed: () => context.push('/time-mosaic-planner'),  
             ),
           ],
         ),

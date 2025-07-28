@@ -1,6 +1,16 @@
 {
-  "focusBlockTitle": "Focus Block",
-  "voiceFocusStart": "Starting Focus Block",
-  "breakBlockTitle": "Break Block",
-  "voiceBreakStart": "Time for a break"
+  "@@locale": "si",
+  "focusBlockTitle": "ලක්ෂ්‍ය කාලය",
+  "voiceFocusStart": "ලක්ෂ්‍ය කාලය ආරම්භ වේ",
+  "breakBlockTitle": "විවේක කාලය",
+  "voiceBreakStart": "විවේක ගන්න වේලාවයි",
+  "mood": "භාවනාව",
+  "timeMosaicPlanner": "කාල මෝසැක් සැලසුම්කරු",
+  "appTitle": "Humble Time Tracker",
+  "logHistory": "ලඝු ඉතිහාසය",
+  "actuals": "සත්‍ය වාර්තා",
+  "pacing": "වේග සැලසුම",
+  "scheduler": "කාලසටහන් සකස්කරු",
+  "settings": "සැකසුම්"
 }
+

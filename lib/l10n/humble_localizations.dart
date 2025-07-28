@@ -1,94 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:humble_time_app/l10n/app_localizations.dart';
 
 class HumbleLocalizations {
-  final Locale locale;
+  final AppLocalizations _inner;
 
-  HumbleLocalizations(this.locale);
+  HumbleLocalizations(this._inner);
 
   static HumbleLocalizations of(BuildContext context) {
-    return Localizations.of<HumbleLocalizations>(context, HumbleLocalizations)!;
+    final localizations = AppLocalizations.of(context);
+    assert(localizations != null, 'AppLocalizations not found in context');
+    return HumbleLocalizations(localizations!);
   }
 
-  static final Map<String, Map<String, String>> _localizedStrings = {
-    'en': {
-      'focusBlockTitle': 'Focus Time',
-      'breakBlockTitle': 'Break Time',
-      'voiceFocusStart': 'Starting focus block.',
-      'voiceBreakStart': 'Take a short break.',
-      'logHistory': 'Log History',
-      'actuals': 'Actuals',
-      'pacing': 'Pacing',
-      'scheduler': 'Scheduler',
-      'settings': 'Settings',
-      'appTitle': 'Humble Time Tracker',
-      'welcome': 'Welcome to Humble',
-    },
-    'ja': {
-      'focusBlockTitle': '集中時間',
-      'breakBlockTitle': '休憩時間',
-      'voiceFocusStart': '集中ブロックを開始します。',
-      'voiceBreakStart': '少し休憩しましょう。',
-      'logHistory': '履歴ログ',
-      'actuals': '実績',
-      'pacing': 'ペーシング',
-      'scheduler': 'スケジューラー',
-      'settings': '設定',
-      'appTitle': 'ハンブル時間トラッカー',
-      'welcome': 'ようこそハンブルへ',
-    },
-    'si': {
-      'focusBlockTitle': 'ඉස්සරහ කාලය',
-      'breakBlockTitle': 'විවේක කාලය',
-      'voiceFocusStart': 'ඉස්සරහ කාලය ආරම්භ වේ.',
-      'voiceBreakStart': 'සුළු විවේකයක් ගන්න.',
-      'logHistory': 'ලොග් ඉතිහාසය',
-      'actuals': 'සත්‍ය දත්ත',
-      'pacing': 'උපායමාර්ගය',
-      'scheduler': 'සැලසුම්කරු',
-      'settings': 'සැකසුම්',
-      'appTitle': 'හම්බල් වේලාව ට්‍රැකර්',
-      'welcome': 'හම්බල් වෙත සාදරයෙන් පිළිගනිමු',
-    },
-  };
+  // ✅ Expose the delegate
+  static const LocalizationsDelegate<HumbleLocalizations> delegate = HumbleLocalizationsDelegate();
 
-  // Fallback for undefined keys or languages
-  String _translate(String key) {
-    return _localizedStrings[locale.languageCode]?[key] ??
-        _localizedStrings['en']?[key] ??
-        key;
-  }
+  // ✅ Forwarding getters for all defined keys
+  String get focusBlockTitle => _inner.focusBlockTitle;
+  String get breakBlockTitle => _inner.breakBlockTitle;
+  String get voiceFocusStart => _inner.voiceFocusStart;
+  String get voiceBreakStart => _inner.voiceBreakStart;
+  String get mood => _inner.mood;
+  String get timeMosaicPlanner => _inner.timeMosaicPlanner;
 
-  String get focusBlockTitle => _translate('focusBlockTitle');
-  String get breakBlockTitle => _translate('breakBlockTitle');
-  String get voiceFocusStart => _translate('voiceFocusStart');
-  String get voiceBreakStart => _translate('voiceBreakStart');
-
-  String get logHistory => _translate('logHistory');
-  String get actuals => _translate('actuals');
-  String get pacing => _translate('pacing');
-  String get scheduler => _translate('scheduler');
-  String get settings => _translate('settings');
-
-  String get appTitle => _translate('appTitle');
-  String get welcome => _translate('welcome');
-
-  static const LocalizationsDelegate<HumbleLocalizations> delegate = _HumbleLocalizationsDelegate();
+  String get logHistory => _inner.logHistory;
+  String get actuals => _inner.actuals;
+  String get pacing => _inner.pacing;
+  String get scheduler => _inner.scheduler;
+  String get settings => _inner.settings;
+  String get appTitle => _inner.appTitle;
 }
 
-class _HumbleLocalizationsDelegate extends LocalizationsDelegate<HumbleLocalizations> {
-  const _HumbleLocalizationsDelegate();
+class HumbleLocalizationsDelegate extends LocalizationsDelegate<HumbleLocalizations> {
+  const HumbleLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'ja', 'si'].contains(locale.languageCode);
+    return AppLocalizations.supportedLocales.contains(locale);
   }
 
   @override
   Future<HumbleLocalizations> load(Locale locale) async {
-    return HumbleLocalizations(locale);
+    final inner = await AppLocalizations.delegate.load(locale);
+    return HumbleLocalizations(inner);
   }
 
   @override
-  bool shouldReload(_HumbleLocalizationsDelegate old) => false;
+  bool shouldReload(HumbleLocalizationsDelegate old) => false;
 }
-

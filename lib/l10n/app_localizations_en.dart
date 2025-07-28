@@ -19,4 +19,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceBreakStart => 'Time for a break';
+
+  @override
+  String get mood => 'Mood';
+
+  @override
+  String get timeMosaicPlanner => 'Time Mosaic Planner';
+
+  @override
+  String get appTitle => 'Humble Time Tracker';
+
+  @override
+  String get logHistory => 'Log History';
+
+  @override
+  String get actuals => 'Actuals';
+
+  @override
+  String get pacing => 'Pacing';
+
+  @override
+  String get scheduler => 'Scheduler';
+
+  @override
+  String get settings => 'Settings';
 }

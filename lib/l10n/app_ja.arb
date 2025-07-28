@@ -1,6 +1,15 @@
 {
-  "focusBlockTitle": "Focus Block",
-  "voiceFocusStart": "Starting Focus Block",
-  "breakBlockTitle": "Break Block",
-  "voiceBreakStart": "Time for a break"
+  "focusBlockTitle": "集中ブロック",
+  "voiceFocusStart": "集中ブロックを開始します",
+  "breakBlockTitle": "休憩ブロック",
+  "voiceBreakStart": "休憩時間です",
+  "mood": "気分",
+  "timeMosaicPlanner": "タイムモザイクプランナー",
+  "appTitle": "ハンブル・タイム・トラッカー",
+  "logHistory": "履歴ログ",
+  "actuals": "実績",
+  "pacing": "ペーシング",
+  "scheduler": "スケジューラー",
+  "settings": "設定"
 }
+

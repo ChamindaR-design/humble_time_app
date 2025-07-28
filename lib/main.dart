@@ -9,8 +9,11 @@ import 'package:humble_time_app/core/navigation/go_router.dart';
 import 'package:humble_time_app/core/providers/theme_provider.dart';
 import 'package:humble_time_app/core/providers/localization_provider.dart';
 
-import 'package:humble_time_app/l10n/flutter_localizations.dart';
+//import 'package:humble_time_app/l10n/flutter_localizations.dart';
 import 'package:humble_time_app/models/time_log_entry.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:humble_time_app/l10n/app_localizations.dart';
 
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
   TimeLogEntry(
@@ -68,7 +71,7 @@ class HumbleApp extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
     final locale = ref.watch(localeProvider);
 
-    return MaterialApp.router(
+    /*return MaterialApp.router(
       title: 'Humble Time Tracker',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
@@ -78,6 +81,40 @@ class HumbleApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.delegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
+    );*/
+      /*return MaterialApp.router(
+        title: 'Humble Time Tracker',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: themeMode,
+        routerConfig: router,
+        localizationsDelegates: AppLocalizations.delegates,
+        supportedLocales: const [
+          Locale('en'),
+          Locale('si'),
+          Locale('ja'),
+        ],
+        locale: locale,*/
+        return MaterialApp.router(
+          title: 'Humble Time Tracker',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeMode,
+          routerConfig: router,
+          localizationsDelegates: [
+            AppLocalizations.delegate, // Your generated delegate
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            Locale('en'),
+            Locale('si'),
+            Locale('ja'),
+          ],
+          locale: locale,
     );
   }
 }

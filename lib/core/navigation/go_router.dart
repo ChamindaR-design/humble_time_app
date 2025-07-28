@@ -6,6 +6,8 @@ import 'package:humble_time_app/features/scheduler/scheduler_screen.dart';
 import 'package:humble_time_app/features/settings/settings_screen.dart';
 import 'package:humble_time_app/features/pacing/pacing_screen.dart';
 import 'package:humble_time_app/features/actuals/actuals_screen.dart';
+import 'package:humble_time_app/features/mood/mood_screen.dart';
+import 'package:humble_time_app/features/planner/time_mosaic_screen.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -34,5 +36,13 @@ final router = GoRouter(
       path: '/settings',
       builder: (_, __) => const SettingsScreen(),
     ),
+    GoRoute(
+      path: '/mood',
+      builder: (_, __) => const MoodScreen(),
+    ),
+    GoRoute(
+      path: '/time-mosaic-planner',
+      builder: (_, __) => const TimeMosaicScreen(),
+    ),        
   ],
 );

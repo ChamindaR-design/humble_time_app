@@ -43,4 +43,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settings => '設定';
+
+  @override
+  String get journalReview => 'ジャーナルレビュー';
 }

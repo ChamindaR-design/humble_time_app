@@ -43,4 +43,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get settings => 'සැකසුම්';
+
+  @override
+  String get journalReview => 'දායක සමාලෝචනය';
 }

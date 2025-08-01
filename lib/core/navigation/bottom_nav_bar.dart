@@ -13,7 +13,6 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Safely extract the current route path using the routeInformationProvider
     final location = GoRouter.of(context)
         .routeInformationProvider
         .value
@@ -31,12 +30,13 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Schedule'),
         BottomNavigationBarItem(icon: Icon(Icons.emoji_emotions), label: 'Mood'),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: 'Journal'), // 🔄 Icon updated!
       ],
+      type: BottomNavigationBarType.fixed,
     );
   }
 
   int _getCurrentIndex(String location) {
-    // Normalize location in case of trailing slashes
     final normalized = location.replaceAll(RegExp(r'/+$'), '');
 
     return {
@@ -44,6 +44,7 @@ class BottomNavBar extends StatelessWidget {
       '/schedule': 1,
       '/mood': 2,
       '/settings': 3,
+      '/journal': 4,
     }[normalized] ?? 0;
   }
 
@@ -53,6 +54,7 @@ class BottomNavBar extends StatelessWidget {
       '/schedule',
       '/mood',
       '/settings',
+      '/journal',
     ][index];
   }
 }

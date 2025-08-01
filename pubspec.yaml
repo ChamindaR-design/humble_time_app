@@ -19,6 +19,9 @@ dependencies:
   provider: ^6.0.0
   flutter_riverpod: ^2.3.6 # or latest
   go_router: ^13.1.0 # or latest version
+  speech_to_text: ^5.4.0
+  #speech_to_text: ^7.2.0 # Doesn't work
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

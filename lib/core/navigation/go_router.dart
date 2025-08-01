@@ -12,6 +12,9 @@ import 'package:humble_time_app/features/mood/mood_screen.dart';
 import 'package:humble_time_app/features/planner/time_mosaic_screen.dart';
 import 'package:humble_time_app/features/schedule/schedule_screen.dart';
 
+import 'package:humble_time_app/features/journal/journal_review_screen.dart';
+import 'package:humble_time_app/features/journal/journal_main_screen.dart';
+
 final router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -36,6 +39,10 @@ final router = GoRouter(
       path: '/time-mosaic-planner',
       builder: (_, __) => const TimeMosaicScreen(),
     ),
+    GoRoute(
+      path: '/journal-review',
+      builder: (_, __) => const JournalReviewScreen(),
+    ),
 
     // 🧱 Shell layout routes (use shared AppShell + BottomNav)
     ShellRoute(
@@ -56,6 +63,10 @@ final router = GoRouter(
         GoRoute(
           path: '/settings',
           builder: (_, __) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/journal',
+          builder: (_, __) => const JournalMainScreen(),
         ),
       ],
     ),

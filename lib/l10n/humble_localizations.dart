@@ -29,6 +29,8 @@ class HumbleLocalizations {
   String get scheduler => _inner.scheduler;
   String get settings => _inner.settings;
   String get appTitle => _inner.appTitle;
+
+  String get journalReview => _inner.journalReview;
 }
 
 class HumbleLocalizationsDelegate extends LocalizationsDelegate<HumbleLocalizations> {

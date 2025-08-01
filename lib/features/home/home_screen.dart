@@ -57,6 +57,11 @@ class HomeScreen extends StatelessWidget {
               },*/
               onPressed: () => context.push('/time-mosaic-planner'),  
             ),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.book),
+              label: Text(local.journalReview), // Ensure this key exists in `HumbleLocalizations`
+              onPressed: () => context.push('/journal-review'),
+            ),
           ],
         ),
       ),

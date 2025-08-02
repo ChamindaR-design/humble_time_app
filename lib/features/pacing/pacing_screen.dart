@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../services/voice_service.dart';
 import '../../core/utils/ui_toolkit.dart';
+import '../../widgets/session/session_features.dart';
+
+enum IntentionType { calm, clarity, focus, kindness }
+enum BreathingStyle { box, fourSevenEight, custom }
 
 class PacingScreen extends StatefulWidget {
   const PacingScreen({super.key});
@@ -23,19 +27,41 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
   bool isRunning = false;
   bool affirmationsEnabled = true;
 
+  IntentionType selectedIntention = IntentionType.calm;
+  BreathingStyle selectedBreathing = BreathingStyle.box;
+
   @override
   void initState() {
     super.initState();
+    _setupBreathController();
+    _setupTimerController();
+    VoiceService.speak("What would you like to cultivate today?");
+  }
 
+  void _setupBreathController() {
     _breathController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: _getBreathDuration(),
     )..repeat(reverse: true);
 
     _breathAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
       CurvedAnimation(parent: _breathController, curve: Curves.easeInOut),
     );
+  }
 
+  Duration _getBreathDuration() {
+    switch (selectedBreathing) {
+      case BreathingStyle.fourSevenEight:
+        return const Duration(seconds: 8); // Longer out breath
+      case BreathingStyle.box:
+        return const Duration(seconds: 4);
+      case BreathingStyle.custom:
+      //default:
+        return const Duration(seconds: 5);
+    }
+  }
+
+  void _setupTimerController() {
     _timerController = AnimationController(
       vsync: this,
       duration: Duration(seconds: blockDurationSeconds),
@@ -47,17 +73,46 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
         setState(() => isRunning = false);
 
         if (affirmationsEnabled && currentBlock + 1 < totalBlocks) {
-          VoiceService.speak("Pause. You're staying present.");
+          VoiceService.speak(_getAffirmationForIntention());
         }
 
         if (currentBlock + 1 < totalBlocks) {
-          currentBlock++;
+          setState(() => currentBlock++);
         } else {
           VoiceService.speak("All pacing blocks complete. Well done.");
-          currentBlock = 0;
+          Future.delayed(const Duration(milliseconds: 700), () {
+            if (!mounted) return;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => SessionEndScreen(completedBlocks: totalBlocks),
+              ),
+            );
+            setState(() => currentBlock = 0);
+          });
         }
       }
     });
+  }
+
+  String _getAffirmationForIntention() {
+    switch (selectedIntention) {
+      case IntentionType.focus: return "Stay present. You’re making progress.";
+      case IntentionType.kindness: return "Be gentle. You're doing enough.";
+      case IntentionType.clarity: return "Let thoughts settle. Clarity comes.";
+      case IntentionType.calm:  return "Enjoy this moment. Just breathe.";
+      //default: return "Enjoy this moment. Just breathe.";
+    }
+  }
+
+  Color getThemeColor() {
+    switch (selectedIntention) {
+      case IntentionType.focus: return Colors.deepPurpleAccent;
+      case IntentionType.kindness: return Colors.pinkAccent;
+      case IntentionType.clarity: return Colors.teal;
+      case IntentionType.calm: return Colors.indigo.shade200;
+      //default: return Colors.indigo.shade200;
+    }
   }
 
   void startBlock() {
@@ -72,7 +127,16 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
 
   void resetSession() {
     currentBlock = 0;
+    _timerController.reset();
     setState(() => isRunning = false);
+  }
+
+  void updateBreathingStyle(BreathingStyle style) {
+    setState(() {
+      selectedBreathing = style;
+      _breathController.dispose();
+      _setupBreathController();
+    });
   }
 
   @override
@@ -99,9 +163,49 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Gentle Pacing", style: TextStyle(fontSize: fontSize + 4, fontWeight: FontWeight.bold)),
+            DropdownButton<int>(
+              value: blockDurationSeconds,
+              items: [180, 300, 600, 900, 1500].map((sec) {
+                return DropdownMenuItem(
+                  value: sec,
+                  child: Text("${(sec / 60).round()} min"),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() {
+                    blockDurationSeconds = val;
+                    _timerController.duration = Duration(seconds: val);
+                  });
+                }
+              },
+            ),
+            Text("Intention", style: TextStyle(fontSize: fontSize + 4, fontWeight: FontWeight.bold)),
+            DropdownButton<IntentionType>(
+              value: selectedIntention,
+              items: IntentionType.values.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Text(type.name.toUpperCase()),
+                );
+              }).toList(),
+              onChanged: (val) => setState(() => selectedIntention = val!),
+            ),
+            const SizedBox(height: 8),
+            Text("Breathing Style", style: TextStyle(fontSize: fontSize)),
+            DropdownButton<BreathingStyle>(
+              value: selectedBreathing,
+              items: BreathingStyle.values.map((b) {
+                return DropdownMenuItem(
+                  value: b,
+                  child: Text(b.name.replaceAll("_", " ").toUpperCase()),
+                );
+              }).toList(),
+              onChanged: (val) => updateBreathingStyle(val!),
+            ),
             const SizedBox(height: 16),
             Text("Block ${currentBlock + 1} of $totalBlocks", style: TextStyle(fontSize: fontSize)),
+            LinearProgressIndicator(value: (currentBlock + 1) / totalBlocks),
             const SizedBox(height: 16),
             AnimatedBuilder(
               animation: _breathAnimation,
@@ -114,7 +218,7 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
                       width: 110,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.indigo.shade200,
+                        color: getThemeColor(),
                       ),
                       child: const Center(
                         child: Icon(Icons.self_improvement, size: 60, color: Colors.white),
@@ -128,13 +232,28 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
             Center(
               child: Text(timeRemaining, style: TextStyle(fontSize: fontSize)),
             ),
-            const SizedBox(height: 24),
-            Center(
-              child: isRunning
-                  ? ElevatedButton(onPressed: stopBlock, child: Text("Pause", style: TextStyle(fontSize: fontSize)))
-                  : ElevatedButton(onPressed: startBlock, child: Text("Start Block", style: TextStyle(fontSize: fontSize))),
-            ),
             const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: currentBlock > 0
+                      ? () => setState(() => currentBlock--)
+                      : null,
+                ),
+                isRunning
+                    ? ElevatedButton(onPressed: stopBlock, child: Text("Pause", style: TextStyle(fontSize: fontSize)))
+                    : ElevatedButton(onPressed: startBlock, child: Text("Start", style: TextStyle(fontSize: fontSize))),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed: currentBlock < totalBlocks - 1
+                      ? () => setState(() => currentBlock++)
+                      : null,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
             Center(
               child: ElevatedButton(
                 onPressed: resetSession,
@@ -148,6 +267,26 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
               onChanged: (val) => setState(() => affirmationsEnabled = val),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SessionEndScreen extends StatelessWidget {
+  final int completedBlocks;
+
+  const SessionEndScreen({super.key, required this.completedBlocks});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Session Summary")),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SessionFeatures(
+          currentBlock: completedBlocks,
+          totalBlocks: completedBlocks,
         ),
       ),
     );

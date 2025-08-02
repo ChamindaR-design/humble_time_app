@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:humble_time_app/l10n/humble_localizations.dart';
+import 'package:humble_time_app/widgets/narrated_text.dart'; // <-- Import voice-aware text
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,12 +11,25 @@ class HomeScreen extends StatelessWidget {
     final local = HumbleLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(local.appTitle)),
+      appBar: AppBar(
+        title: NarratedText(
+          text: local.appTitle,
+          baseFontSize: 20,
+          speakOnBuild: false, // no need to speak this
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            NarratedText( // <-- subtle emotional cue
+              text: 'What would you like to do next?',
+              baseFontSize: 18,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+              speakOnBuild: true,
+            ),
+            const SizedBox(height: 12),
             ElevatedButton.icon(
               icon: const Icon(Icons.history),
               label: Text(local.logHistory),
@@ -44,22 +58,16 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton.icon(
               icon: const Icon(Icons.mood),
               label: Text(local.mood),
-              /*onPressed: () {
-                Navigator.pushNamed(context, '/mood');*
-              },*/
               onPressed: () => context.push('/mood'),  
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.schedule),
               label: Text(local.timeMosaicPlanner),
-              /*onPressed: () {
-                Navigator.pushNamed(context, '/time-mosaic-planner');
-              },*/
               onPressed: () => context.push('/time-mosaic-planner'),  
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.book),
-              label: Text(local.journalReview), // Ensure this key exists in `HumbleLocalizations`
+              label: Text(local.journalReview),
               onPressed: () => context.push('/journal-review'),
             ),
           ],

@@ -12,36 +12,37 @@ import 'package:humble_time_app/features/mood/mood_screen.dart';
 import 'package:humble_time_app/features/planner/time_mosaic_screen.dart';
 import 'package:humble_time_app/features/schedule/schedule_screen.dart';
 
-import 'package:humble_time_app/features/journal/journal_review_screen.dart';
-import 'package:humble_time_app/features/journal/journal_main_screen.dart';
+// ✅ Use import prefixes to resolve duplicate class names
+import 'package:humble_time_app/features/journal/journal_review_screen.dart' as review;
+import 'package:humble_time_app/features/journal/journal_main_screen.dart' as main;
 
-final router = GoRouter(
+final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
     // 📦 Full-screen routes outside the BottomNav shell
     GoRoute(
       path: '/log',
-      builder: (_, __) => const LogScreen(),
+      builder: (_, _) => const LogScreen(),
     ),
     GoRoute(
       path: '/actuals',
-      builder: (_, __) => const ActualsScreen(),
+      builder: (_, _) => const ActualsScreen(),
     ),
     GoRoute(
       path: '/pacing',
-      builder: (_, __) => const PacingScreen(),
+      builder: (_, _) => const PacingScreen(),
     ),
     GoRoute(
       path: '/scheduler',
-      builder: (_, __) => const SchedulerScreen(),
+      builder: (_, _) => const SchedulerScreen(),
     ),
     GoRoute(
       path: '/time-mosaic-planner',
-      builder: (_, __) => const TimeMosaicScreen(),
+      builder: (_, _) => const TimeMosaicScreen(),
     ),
     GoRoute(
       path: '/journal-review',
-      builder: (_, __) => const JournalReviewScreen(),
+      builder: (_, _) => const review.JournalReviewScreen(),
     ),
 
     // 🧱 Shell layout routes (use shared AppShell + BottomNav)
@@ -50,23 +51,23 @@ final router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          builder: (_, __) => const HomeScreen(),
+          builder: (_, _) => const HomeScreen(),
         ),
         GoRoute(
           path: '/schedule',
-          builder: (_, __) => const ScheduleScreen(),
+          builder: (_, _) => const ScheduleScreen(),
         ),
         GoRoute(
           path: '/mood',
-          builder: (_, __) => const MoodScreen(),
+          builder: (_, _) => const MoodScreen(),
         ),
         GoRoute(
           path: '/settings',
-          builder: (_, __) => const SettingsScreen(),
+          builder: (_, _) => const SettingsScreen(),
         ),
         GoRoute(
           path: '/journal',
-          builder: (_, __) => const JournalMainScreen(),
+          builder: (_, _) => const main.JournalMainScreen(),
         ),
       ],
     ),

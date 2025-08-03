@@ -1,3 +1,5 @@
+// Screen for breathing and mindfulness block pacing.
+
 import 'package:flutter/material.dart';
 import '../../services/voice_service.dart';
 import '../../core/utils/ui_toolkit.dart';

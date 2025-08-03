@@ -1,3 +1,5 @@
+import 'dart:io'; // 👈 Platform checks
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class VoiceService {
@@ -9,22 +11,43 @@ class VoiceService {
   /// Internal flag to prevent overlapping speech
   static bool _isSpeaking = false;
 
-  /// Initializes TTS with default voice settings
+  /// Initializes TTS with default voice settings + fallback
   static Future<void> init() async {
-    await _tts.setLanguage("en-GB");
-    await _tts.setPitch(1.0);          // Moderate tone
-    await _tts.setSpeechRate(0.4);     // Calm pacing
+    final availableLanguages = await _tts.getLanguages;
+    final preferredLanguage = availableLanguages.contains("en-GB")
+        ? "en-GB"
+        : "en-US"; // 🌐 Fallback if needed
+
+    await _tts.setLanguage(preferredLanguage);
+    await _tts.setPitch(1.0);              // Moderate tone
+    await _tts.setSpeechRate(0.4);         // Calm pacing
     await _tts.setVolume(1.0);
+    await _tts.awaitSpeakCompletion(true); // 🔊 Full delivery before reset
   }
 
-  /// Speaks text if enabled, with overlap protection
+  /// Speaks text if enabled, with overlap + platform safeguards
   static Future<void> speak(String text) async {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
-    _isSpeaking = true;
-    await _tts.stop();                 // Ensure clean transition
-    await _tts.speak(text);
-    _isSpeaking = false;
+    // 🧯 Windows debug mode protection
+    if (Platform.isWindows && kDebugMode) {
+      debugPrint('VoiceService: Skipping TTS in Windows debug mode');
+      return;
+    }
+
+    debugPrint('VoiceService: Speaking — "$text"');
+
+    try {
+      _isSpeaking = true;
+      await _tts.stop(); // Clear buffered speech
+      await _tts.awaitSpeakCompletion(true);
+      await _tts.speak(text);
+      await Future.delayed(const Duration(milliseconds: 300)); // Optional buffer
+    } catch (e) {
+      debugPrint('VoiceService: Failed to speak — $e');
+    } finally {
+      _isSpeaking = false;
+    }
   }
 
   /// Shortcut for conditional speech
@@ -32,7 +55,7 @@ class VoiceService {
     if (isVoiceEnabled) await speak(text);
   }
 
-  /// Stops current speech
+  /// Stops current speech immediately
   static Future<void> stop() async => await _tts.stop();
 
   /// Update voice characteristics live
@@ -47,4 +70,7 @@ class VoiceService {
     if (language != null) await _tts.setLanguage(language);
     if (volume != null) await _tts.setVolume(volume);
   }
+
+  /// Optional: expose instance for advanced use
+  static FlutterTts get instance => _tts;
 }

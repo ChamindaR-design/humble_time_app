@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:humble_time_app/models/time_block.dart';
+import 'package:humble_time_app/models/task_type.dart';
 
 class ScheduleBlock extends StatelessWidget {
   final String title;
@@ -13,40 +13,78 @@ class ScheduleBlock extends StatelessWidget {
     super.key,
   });
 
+  Color? getBlockColor(TaskType type) {
+    switch (type) {
+      case TaskType.focusBlock:
+        return Colors.green[100];
+      case TaskType.breakBlock:
+        return Colors.orange[100];
+      case TaskType.meditation:
+        return Colors.purple[100];
+      case TaskType.other:
+        return Colors.blueGrey[100];
+    }
+  }
+
+  IconData getBlockIcon(TaskType type) {
+    switch (type) {
+      case TaskType.focusBlock:
+        return Icons.work;
+      case TaskType.breakBlock:
+        return Icons.coffee;
+      case TaskType.meditation:
+        return Icons.self_improvement;
+      case TaskType.other:
+        return Icons.track_changes;
+    }
+  }
+
+  IconData getTrailingIcon(TaskType type) {
+    switch (type) {
+      case TaskType.focusBlock:
+        return Icons.check_circle;
+      case TaskType.breakBlock:
+        return Icons.bedtime;
+      case TaskType.meditation:
+        return Icons.spa;
+      case TaskType.other:
+        return Icons.explore;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isBreak = taskType == TaskType.breakBlock;
+    final blockColor = getBlockColor(taskType);
+    final icon = getBlockIcon(taskType);
+    final trailingIcon = getTrailingIcon(taskType);
 
-    final blockColor = isBreak ? Colors.orange[100] : Colors.green[100];
-    final icon = isBreak ? Icons.coffee : Icons.work;
-    final trailingIcon = isBreak
-        ? Icons.self_improvement
-        : Icons.track_changes;
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      color: blockColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      child: ListTile(
-        leading: Icon(icon, color: Colors.teal),
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+    return Semantics(
+      label: '${taskType.name} block: $title',
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        color: blockColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
+        child: ListTile(
+          leading: Icon(icon, color: Colors.teal),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        subtitle: Text(
-          '${duration.inMinutes} minute${duration.inMinutes != 1 ? 's' : ''}',
-          style: const TextStyle(
-            fontSize: 14,
-            fontStyle: FontStyle.italic,
-            color: Colors.grey,
+          subtitle: Text(
+            '${duration.inMinutes} minute${duration.inMinutes != 1 ? 's' : ''}',
+            style: const TextStyle(
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              color: Colors.grey,
+            ),
           ),
+          trailing: Icon(trailingIcon, color: Colors.teal),
         ),
-        trailing: Icon(trailingIcon, color: isBreak ? Colors.deepOrange : Colors.green[700]),
       ),
     );
   }

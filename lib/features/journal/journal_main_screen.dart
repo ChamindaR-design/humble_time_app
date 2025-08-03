@@ -80,7 +80,8 @@ class _JournalMainScreenState extends State<JournalMainScreen> {
   }
 
   void _navigateToReview() {
-    context.push('/journal-review');
+    //context.push('/journal-review');
+    context.go('/journal-review'); // ✅ Triggers ShellRoute with BottomNavBar
   }
 
   @override

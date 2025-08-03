@@ -1,6 +1,4 @@
-//import 'package:flutter/foundation.dart';
-
-enum TaskType { focusBlock, breakBlock }
+import 'package:humble_time_app/models/task_type.dart';
 
 class TimeBlock {
   final String label;
@@ -16,13 +14,11 @@ class TimeBlock {
   TaskType get taskType =>
       isBreak ? TaskType.breakBlock : TaskType.focusBlock;
 
-  // Optional: for easier logging or debugging
   @override
   String toString() {
     return 'TimeBlock(label: $label, duration: ${duration.inMinutes} mins, type: ${taskType.name})';
   }
 
-  // Optional: Equality helpers (if needed for comparing blocks)
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

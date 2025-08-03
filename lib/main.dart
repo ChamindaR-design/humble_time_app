@@ -32,10 +32,8 @@ final ttsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize voice engine and speak startup prompt
   await VoiceService.init();
-  VoiceService.speak(PromptLibrary.forEvent('startBlock'));
+  debugPrint('VoiceService initialized with TTS settings');
 
   runApp(
     ProviderScope(
@@ -79,19 +77,49 @@ class HumbleApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-      routerConfig: router, // Defined in go_router.dart
+      routerConfig: router,
       localizationsDelegates: [
-        AppLocalizations.delegate, // Your custom app localization
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en'), // English
-        Locale('si'), // Sinhala
-        Locale('ja'), // Japanese
+        Locale('en'),
+        Locale('si'),
+        Locale('ja'),
       ],
       locale: locale,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            if (child != null) child,
+            const VoiceInitializer(), // 👈 Ambient voice trigger
+          ],
+        );
+      },
     );
   }
+}
+
+class VoiceInitializer extends StatefulWidget {
+  const VoiceInitializer({super.key});
+
+  @override
+  State<VoiceInitializer> createState() => _VoiceInitializerState();
+}
+
+class _VoiceInitializerState extends State<VoiceInitializer> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      final startupPrompt = PromptLibrary.forEvent('startBlock');
+      debugPrint('VoiceInitializer: Startup prompt — "$startupPrompt"');
+      VoiceService.speak(startupPrompt);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }

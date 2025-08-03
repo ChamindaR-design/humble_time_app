@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/services/voice_service.dart';
-import 'package:humble_time_app/services/mood_logger.dart'; // imaginary module
-import 'package:humble_time_app/services/pacing_controller.dart'; // imaginary module
+import 'package:hive/hive.dart';
+import 'package:humble_time_app/models/log_entry.dart';
 
 class MoodScreen extends StatefulWidget {
   const MoodScreen({super.key});
@@ -12,7 +12,6 @@ class MoodScreen extends StatefulWidget {
 }
 
 class _MoodScreenState extends State<MoodScreen> {
-  // Emoji options with semantic labels
   final Map<String, String> moods = {
     '🙂': 'Happy',
     '😐': 'Neutral',
@@ -24,19 +23,44 @@ class _MoodScreenState extends State<MoodScreen> {
   @override
   void initState() {
     super.initState();
-    VoiceService.speak(PromptLibrary.forEvent('moodPrompt'));
+    _initializeVoice();
   }
 
-  void handleMoodTap(String emoji, String label) async {
+  Future<void> _initializeVoice() async {
+    await VoiceService.init();
+    await VoiceService.speak(PromptLibrary.forEvent('moodPrompt'));
+  }
+
+  Future<void> handleMoodTap(String emoji, String label) async {
     debugPrint('Mood selected: $emoji ($label)');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Selected mood: $label'),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+
+    // Delay to avoid overlapping with snackbar animation
+    await Future.delayed(const Duration(milliseconds: 300));
     await VoiceService.speak(PromptLibrary.forEvent('moodSelected', param: label));
 
-    // 💾 Mood feedback and pacing response
-    MoodLogger.saveMood(label);
-    PacingController.adjustBasedOnMood(label);
+    try {
+      final box = Hive.box<LogEntry>('logEntries');
+      final latest = box.values.isNotEmpty ? box.values.last : null;
 
-    // 🧭 Optional navigation
-    // context.go('/schedule');
+      if (latest != null) {
+        latest.mood = label;
+        await latest.save();
+        debugPrint('Mood saved to latest LogEntry.');
+      } else {
+        debugPrint('No LogEntry found to associate mood with.');
+      }
+    } catch (e) {
+      debugPrint('Error saving mood: $e');
+    }
+
+    // Optional navigation or pacing logic can go here
   }
 
   @override

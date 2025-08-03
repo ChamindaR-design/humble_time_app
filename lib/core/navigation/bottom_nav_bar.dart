@@ -30,7 +30,8 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Schedule'),
         BottomNavigationBarItem(icon: Icon(Icons.emoji_emotions), label: 'Mood'),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-        BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: 'Journal'), // 🔄 Icon updated!
+        BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: 'Journal'),
+        BottomNavigationBarItem(icon: Icon(Icons.access_time), label: 'Pacing'),
       ],
       type: BottomNavigationBarType.fixed,
     );
@@ -39,22 +40,29 @@ class BottomNavBar extends StatelessWidget {
   int _getCurrentIndex(String location) {
     final normalized = location.replaceAll(RegExp(r'/+$'), '');
 
-    return {
+    const routeToIndex = {
       '/': 0,
       '/schedule': 1,
       '/mood': 2,
       '/settings': 3,
       '/journal': 4,
-    }[normalized] ?? 0;
+      '/journal-review': 4, // Same tab group as journal main
+      '/pacing': 5,
+    };
+
+    return routeToIndex[normalized] ?? 0;
   }
 
   String _getRouteForIndex(int index) {
-    return [
+    const routes = [
       '/',
       '/schedule',
       '/mood',
       '/settings',
       '/journal',
-    ][index];
+      '/pacing',
+    ];
+
+    return routes[index];
   }
 }

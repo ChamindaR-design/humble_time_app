@@ -1,0 +1,26 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+
+// Initialize logger
+final Logger log = Logger();
+
+Future<void> saveReflection({
+  required int currentBlock,
+  required String intention,
+  required String breathingStyle,
+  String note = "Session ended smoothly.",
+}) async {
+  final prefs = await SharedPreferences.getInstance();
+  final now = DateTime.now();
+  final timestamp = DateFormat('yyyy-MM-dd HH:mm').format(now);
+
+  final key = "reflection_$timestamp";
+  final value =
+      "Block: ${currentBlock + 1}, Intention: $intention, Breathing: $breathingStyle, Note: $note";
+
+  await prefs.setString(key, value);
+
+  // Log reflection data
+  log.i("✅ Saved reflection → $key: $value");
+}

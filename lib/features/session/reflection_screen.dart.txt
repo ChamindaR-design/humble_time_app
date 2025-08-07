@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:humble_time_app/models/log_entry.dart';
-import 'package:humble_time_app/services/log_store.dart';
 
 class ReflectionScreen extends StatefulWidget {
   final LogEntry entry;
@@ -90,25 +89,18 @@ class _ReflectionScreenState extends State<ReflectionScreen> {
             ),
             const Spacer(),
             ElevatedButton.icon(
-            onPressed: () async {
-              final localContext = context; // ✅ Capture context before async gap
+              onPressed: () {
+                final updatedNote = _noteController.text.trim();
+                final updatedEntry = widget.entry.copyWith(
+                  mood: mood.isNotEmpty ? mood : null,
+                  note: updatedNote.isNotEmpty ? updatedNote : null,
+                );
 
-              final updatedNote = _noteController.text.trim();
-              final updatedEntry = widget.entry.copyWith(
-                mood: mood.isNotEmpty ? mood : null,
-                note: updatedNote.isNotEmpty ? updatedNote : null,
-              );
+                // TODO: save to local or remote store here
+                // e.g. await logStore.saveEntry(updatedEntry);
 
-              await LogStore.instance.saveEntry(updatedEntry);
-
-              if (!localContext.mounted) return; // ✅ Guard the actual BuildContext
-
-              ScaffoldMessenger.of(localContext).showSnackBar(
-                const SnackBar(content: Text('Reflection saved')),
-              );
-
-              Navigator.pop(localContext, updatedEntry);
-            },
+                Navigator.pop(context, updatedEntry);
+              },
               icon: const Icon(Icons.save),
               label: const Text('Save & Return'),
             ),

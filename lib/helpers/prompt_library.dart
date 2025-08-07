@@ -19,7 +19,7 @@ class PromptLibrary {
   static String forEvent(String eventKey, {String? param}) {
     switch (eventKey) {
       case 'startBlock':
-        return "Block started. Let’s stay present and keep pacing yourself.";
+        return "Block started. Let’s stay present and keep pacing yourself";
 
       case 'completeBlock':
         return "Well done. That was focused time well spent. Want to log how it felt?";

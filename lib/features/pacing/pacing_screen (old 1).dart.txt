@@ -6,7 +6,6 @@ import '../../core/utils/ui_toolkit.dart';
 import '../../widgets/session/session_features.dart';
 import 'package:go_router/go_router.dart';
 import 'package:humble_time_app/shared_prefs/save_reflection.dart' as reflect;
-import 'package:humble_time_app/shared_prefs/save_reflection.dart'; // or wherever Reflection is defined
 
 enum IntentionType { calm, clarity, focus, kindness }
 enum BreathingStyle { box, fourSevenEight, custom }
@@ -82,53 +81,48 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
       if (mounted) setState(() {});
     });
 
-    _timerController.addStatusListener((status) async {
+    _timerController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (!mounted) return;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          VoiceService.speak("Block ${currentBlock + 1} completed.");
+          setState(() => isRunning = false);
 
-        // ✅ Speak completion message for current block
-        await VoiceService.speak("Block ${currentBlock + 1} completed.");
-        setState(() => isRunning = false);
+          if (affirmationsEnabled && currentBlock + 1 < totalBlocks) {
+            VoiceService.speak(_getAffirmationForIntention());
+          }
 
-        // ✅ Optional affirmation
-        if (affirmationsEnabled && currentBlock + 1 < totalBlocks) {
-          await Future.delayed(const Duration(milliseconds: 300));
-          await VoiceService.speak(_getAffirmationForIntention());
-        }
+          VoiceService.speak("What would you like to do next?");
+        });
 
-        // ✅ Prompt for next action
-        await Future.delayed(const Duration(milliseconds: 300));
-        await VoiceService.speak("What would you like to do next?");
-
-        // ✅ Start next block if available
         if (currentBlock + 1 < totalBlocks) {
-          await Future.delayed(const Duration(milliseconds: 500));
           setState(() => currentBlock++);
-
           _timerController.duration = Duration(seconds: blockDurationSeconds);
           _timerController.reset();
           _timerController.forward(from: 0);
           setState(() => isRunning = true);
 
-          await Future.delayed(const Duration(milliseconds: 300));
-          await VoiceService.speak("Beginning block ${currentBlock + 1}. Let’s breathe together.");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              VoiceService.speak("Beginning block ${currentBlock + 1}. Let’s breathe together.");
+            }
+          });
         } else {
-          // ✅ All blocks complete — navigate to summary
-          if (hasNavigatedToSummary || !mounted) return;
-          hasNavigatedToSummary = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted || hasNavigatedToSummary) return;
+            hasNavigatedToSummary = true;
 
-          await Future.delayed(const Duration(milliseconds: 500));
-          await VoiceService.speak("All pacing blocks complete. Well done.");
-
-          Future.delayed(const Duration(milliseconds: 700), () {
-            if (!mounted) return;
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => SessionEndScreen(completedBlocks: totalBlocks),
-              ),
-            );
-            setState(() => currentBlock = 0);
+            VoiceService.speak("All pacing blocks complete. Well done.");
+            Future.delayed(const Duration(milliseconds: 700), () {
+              if (!mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SessionEndScreen(completedBlocks: totalBlocks),
+                ),
+              );
+              setState(() => currentBlock = 0);
+            });
           });
         }
       }
@@ -235,7 +229,7 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
                           note: "User exited session from pacing screen.",
                         );
                         Navigator.pop(dialogContext); // Close dialog
-                        GoRouter.of(context).pop();   // Exit screen
+                        context.pop(); // Exit screen
                       },
                       child: const Text("Save & Exit"),
                     ),
@@ -374,7 +368,7 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
   }
 }
 
-/*class SessionEndScreen extends StatelessWidget {
+class SessionEndScreen extends StatelessWidget {
   final int completedBlocks;
 
   const SessionEndScreen({super.key, required this.completedBlocks});
@@ -392,32 +386,4 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
       ),
     );
   }
-}*/
-class SessionEndScreen extends StatelessWidget {
-  final int completedBlocks;
-
-  const SessionEndScreen({super.key, required this.completedBlocks});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Reflection?>(
-      future: reflect.loadLatestReflection(),
-      builder: (context, snapshot) {
-        final reflection = snapshot.data;
-
-        return Scaffold(
-          appBar: AppBar(title: const Text("Session Summary")),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SessionFeatures(
-              currentBlock: completedBlocks,
-              totalBlocks: completedBlocks,
-              reflection: reflection, // Pass it in
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
-

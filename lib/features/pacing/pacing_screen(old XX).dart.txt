@@ -6,7 +6,6 @@ import '../../core/utils/ui_toolkit.dart';
 import '../../widgets/session/session_features.dart';
 import 'package:go_router/go_router.dart';
 import 'package:humble_time_app/shared_prefs/save_reflection.dart' as reflect;
-import 'package:humble_time_app/shared_prefs/save_reflection.dart'; // or wherever Reflection is defined
 
 enum IntentionType { calm, clarity, focus, kindness }
 enum BreathingStyle { box, fourSevenEight, custom }
@@ -374,7 +373,7 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
   }
 }
 
-/*class SessionEndScreen extends StatelessWidget {
+class SessionEndScreen extends StatelessWidget {
   final int completedBlocks;
 
   const SessionEndScreen({super.key, required this.completedBlocks});
@@ -392,32 +391,4 @@ class _PacingScreenState extends State<PacingScreen> with TickerProviderStateMix
       ),
     );
   }
-}*/
-class SessionEndScreen extends StatelessWidget {
-  final int completedBlocks;
-
-  const SessionEndScreen({super.key, required this.completedBlocks});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<Reflection?>(
-      future: reflect.loadLatestReflection(),
-      builder: (context, snapshot) {
-        final reflection = snapshot.data;
-
-        return Scaffold(
-          appBar: AppBar(title: const Text("Session Summary")),
-          body: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SessionFeatures(
-              currentBlock: completedBlocks,
-              totalBlocks: completedBlocks,
-              reflection: reflection, // Pass it in
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
-

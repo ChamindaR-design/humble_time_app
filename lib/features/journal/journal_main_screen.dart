@@ -124,6 +124,10 @@ class _JournalMainScreenState extends State<JournalMainScreen> {
                   onPressed: _navigateToReview,
                   child: const Text("Review Entries"),
                 ),
+                OutlinedButton(
+                  onPressed: () => context.go('/'),
+                  child: const Text("Go Home"),
+                ),
               ],
             ),
           ],

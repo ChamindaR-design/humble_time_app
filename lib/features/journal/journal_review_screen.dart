@@ -7,6 +7,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:humble_time_app/utils/export_import_service.dart';
 import 'package:humble_time_app/services/voice_service.dart';
 
+import 'package:go_router/go_router.dart';
+
+// ... [imports remain unchanged]
+
 class JournalReviewScreen extends StatefulWidget {
   const JournalReviewScreen({super.key});
 
@@ -130,8 +134,10 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
             children: [
               ElevatedButton.icon(
                 icon: const Icon(Icons.upload),
@@ -143,6 +149,11 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
                 label: const Text("Import from JSON"),
                 onPressed: _importEntries,
               ),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.insights),
+                label: const Text('View Reflection History'),
+                onPressed: () => context.go('/reflection-history'),
+              ),
             ],
           ),
         ),
@@ -152,3 +163,4 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
     );
   }
 }
+

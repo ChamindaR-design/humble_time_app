@@ -174,6 +174,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Journal Review'**
   String get journalReview;
+
+  /// No description provided for @reflectionHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Reflection History'**
+  String get reflectionHistory;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

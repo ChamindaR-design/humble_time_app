@@ -31,6 +31,8 @@ class HumbleLocalizations {
   String get appTitle => _inner.appTitle;
 
   String get journalReview => _inner.journalReview;
+
+  String get reflectionHistory => _inner.reflectionHistory;
 }
 
 class HumbleLocalizationsDelegate extends LocalizationsDelegate<HumbleLocalizations> {

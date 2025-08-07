@@ -46,4 +46,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get journalReview => 'දායක සමාලෝචනය';
+
+  @override
+  String get reflectionHistory => 'පැහැදිලි කිරීමේ ඉතිහාසය';
 }

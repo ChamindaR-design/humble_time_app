@@ -46,4 +46,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get journalReview => 'ジャーナルレビュー';
+
+  @override
+  String get reflectionHistory => '振り返り履歴';
 }

@@ -12,6 +12,7 @@ import 'package:humble_time_app/core/providers/localization_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:humble_time_app/l10n/app_localizations.dart';
 import 'package:humble_time_app/models/time_log_entry.dart';
+import 'package:humble_time_app/utils/clean_malformed_reflections.dart';
 
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
@@ -32,6 +33,7 @@ final ttsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await cleanMalformedReflections(); // Optional: only in dev
   await VoiceService.init();
   debugPrint('VoiceService initialized with TTS settings');
 

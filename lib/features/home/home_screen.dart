@@ -73,6 +73,11 @@ class HomeScreen extends StatelessWidget {
                   label: Text(local.journalReview),
                   onPressed: () => context.go('/journal-review'),
                 ),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.insights),
+                  label: Text(local.reflectionHistory),
+                  onPressed: () => context.go('/reflection-history'),
+                ),
               ],
             ),
           ),

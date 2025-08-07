@@ -29,11 +29,11 @@ class VoiceService {
   static Future<void> speak(String text) async {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
-/*    // 🧯 Windows debug mode protection
+    // 🧯 Windows debug mode protection
     if (Platform.isWindows && kDebugMode) {
       debugPrint('VoiceService: Skipping TTS in Windows debug mode');
       return;
-    }*/
+    }
 
     debugPrint('VoiceService: Speaking — "$text"');
 

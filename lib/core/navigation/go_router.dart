@@ -18,6 +18,9 @@ import 'package:humble_time_app/features/pacing/pacing_screen.dart';
 import 'package:humble_time_app/features/journal/journal_main_screen.dart' as main;
 import 'package:humble_time_app/features/journal/journal_review_screen.dart' as review;
 
+// Reflection history screen
+import 'package:humble_time_app/features/session/reflection_history_screen.dart';
+
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -38,6 +41,12 @@ final GoRouter router = GoRouter(
       path: '/time-mosaic-planner',
       builder: (_, _) => const TimeMosaicScreen(),
     ),
+/*    GoRoute(
+      path: '/reflection-history',
+      name: 'reflectionHistory',
+      builder: (_, _) => const ReflectionHistoryScreen(),
+    ),*/
+
 
     // 🧱 Shell layout routes (share AppShell + BottomNavBar)
     ShellRoute(
@@ -50,6 +59,7 @@ final GoRouter router = GoRouter(
           '/mood': 'Mood',
           '/settings': 'Settings',
           '/pacing': 'Pacing',
+          '/reflection-history': 'Reflection History',
           '/': 'Home',
         }[state.uri.path];
 
@@ -67,6 +77,7 @@ final GoRouter router = GoRouter(
         GoRoute(path: '/journal', builder: (_, _) => const main.JournalMainScreen()),
         GoRoute(path: '/journal-review', builder: (_, _) => const review.JournalReviewScreen()),
         GoRoute(path: '/pacing', builder: (_, _) => const PacingScreen()),
+        GoRoute(path: '/reflection-history', builder: (_, _) => const ReflectionHistoryScreen()),
       ],
     ),
   ],

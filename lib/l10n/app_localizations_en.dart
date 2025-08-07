@@ -46,4 +46,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get journalReview => 'Journal Review';
+
+  @override
+  String get reflectionHistory => 'Reflection History';
 }

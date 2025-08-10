@@ -2,14 +2,22 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:humble_time_app/models/journal_entry.dart';
+//import 'package:humble_time_app/utils/date_time_format.dart';
+import 'package:humble_time_app/utils/date_time_format.dart' as dtf;
 
 class JournalService {
   static const String _boxName = 'journal_entries';
 
-  final Logger _logger = Logger(
+  /*final Logger _logger = Logger(
     printer: PrettyPrinter(
       methodCount: 0,
       printTime: true,
+    ),
+  );*/
+  final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 0,
+      // printTime: true, ← remove this
     ),
   );
 
@@ -61,12 +69,28 @@ class JournalService {
     }
   }
 
-  void logAllEntries() {
+  /*void logAllEntries() {
     if (!kDebugMode) return;
 
     for (var i = 0; i < _box.length; i++) {
       final entry = _box.getAt(i);
       _logger.d('[$i] ${entry?.timestamp} | Mood: ${entry?.moodLabel} | Tags: ${entry?.blockTags}');
+    }
+  }*/
+  void logAllEntries() {
+    if (!kDebugMode) return;
+
+    for (var i = 0; i < _box.length; i++) {
+      final entry = _box.getAt(i);
+      /*final time = dateTimeFormat(
+        entry?.timestamp ?? DateTime.now(),
+        format: DateTimeFormat.onlyTimeAndSinceStart,
+      );*/
+      final time = dtf.dateTimeFormat(
+        entry?.timestamp ?? DateTime.now(),
+        format: dtf.DateTimeFormat.onlyTimeAndSinceStart,
+      );
+      _logger.d('[$i] $time | Mood: ${entry?.moodLabel} | Tags: ${entry?.blockTags}');
     }
   }
 

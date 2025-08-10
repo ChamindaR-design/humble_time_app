@@ -7,8 +7,7 @@ import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 import 'package:humble_time_app/services/hive_service.dart';
 import 'package:humble_time_app/utils/export_import_service.dart';
 import 'package:share_plus/share_plus.dart';
-//import 'package:cross_file/cross_file.dart';
-import 'package:humble_time_app/core/themes/app_theme.dart';
+import 'package:cross_file/cross_file.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -130,22 +129,16 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           DropdownButton<String>(
             value: settings.colorPalette,
-            items: AppTheme.availablePalettes.map((palette) {
-              return DropdownMenuItem(
-                value: palette,
-                child: AppTheme.palettePreview(palette),
-              );
-            }).toList(),
-            /*onChanged: (newValue) {
+            items: ['Indigo Calm', 'Teal Clarity', 'Pink Kindness']
+                .map((theme) => DropdownMenuItem(
+                      value: theme,
+                      child: Text(theme),
+                    ))
+                .toList(),
+            onChanged: (val) {
               if (val != null) {
                 HapticFeedback.selectionClick();
                 settingsProvider.setColorPalette(val);
-              }
-            },*/
-            onChanged: (newValue) {
-              if (newValue != null) {
-                HapticFeedback.selectionClick();
-                settingsProvider.setColorPalette(newValue);
               }
             },
           ),
@@ -286,8 +279,6 @@ class SettingsScreen extends ConsumerWidget {
     Future<void> _previewAndExport(BuildContext context) async {
       final reflections = await HiveService.exportToJson();
 
-      if (!context.mounted) return; // ✅ Guard before using context
-
       await showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -306,17 +297,19 @@ class SettingsScreen extends ConsumerWidget {
               onPressed: () async {
                 try {
                   final file = await ExportImportService.exportReflectionsToJson(reflections);
-                  if (!context.mounted) return; // ✅ Guard again after async
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Reflections saved to ${file.path}')),
-                  );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Reflections saved to ${file.path}')),
+                    );
+                  }
                 } catch (e) {
-                  if (!context.mounted) return; // ✅ Guard again
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to save: ${e.toString()}')),
-                  );
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save: ${e.toString()}')),
+                    );
+                  }
                 }
               },
             ),

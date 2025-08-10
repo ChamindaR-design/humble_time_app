@@ -9,6 +9,7 @@ class UserSettingsProvider extends ChangeNotifier {
 
   UserSettings get settings => _settings;
 
+  // Toggle methods
   void toggleVoiceNudge(bool value) {
     _settings = _settings.copyWith(enableVoiceNudge: value);
     notifyListeners();
@@ -29,6 +30,7 @@ class UserSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Voice settings
   void setVoicePitch(double pitch) {
     _settings = _settings.copyWith(voicePitch: pitch);
     notifyListeners();
@@ -39,6 +41,7 @@ class UserSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Duration settings
   void updateDefaultDuration(Duration duration) {
     _settings = _settings.copyWith(defaultBlockDuration: duration);
     notifyListeners();
@@ -54,6 +57,7 @@ class UserSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Theme settings
   void setPreferredBrightness(Brightness brightness) {
     _settings = _settings.copyWith(preferredBrightness: brightness);
     notifyListeners();
@@ -64,14 +68,45 @@ class UserSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Update both brightness and palette together
+  void setTheme({required Brightness brightness, required String palette}) {
+    _settings = _settings.copyWith(
+      preferredBrightness: brightness,
+      colorPalette: palette,
+    );
+    notifyListeners();
+  }
+
+  /// Replace all settings at once
   void updateSettings(UserSettings newSettings) {
     _settings = newSettings;
     notifyListeners();
   }
+
+  /// Reset to default values
+  void resetToDefaults() {
+    //_settings = const UserSettings(
+    _settings = UserSettings(
+      enableVoiceNudge: true,
+      enableAnimations: true,
+      isLayoutExpanded: false,
+      enableLayoutSpacing: false,
+      voicePitch: 1.0,
+      voiceSpeed: 0.7,
+      defaultBlockDuration: Duration(minutes: 25),
+      focusBlockDuration: Duration(minutes: 45),
+      breakBlockDuration: Duration(minutes: 15),
+      preferredBrightness: Brightness.light,
+      colorPalette: 'Indigo Calm',
+    );
+    notifyListeners();
+  }
 }
 
+// Riverpod provider
 final userSettingsProvider = ChangeNotifierProvider<UserSettingsProvider>((ref) {
   return UserSettingsProvider(
+    //const UserSettings(
     UserSettings(
       enableVoiceNudge: true,
       enableAnimations: true,

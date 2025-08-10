@@ -42,10 +42,10 @@ class VoiceService {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
     // 🧯 Windows debug mode protection
-    if (Platform.isWindows && kDebugMode) {
+/*    if (Platform.isWindows && kDebugMode) {
       _log('VoiceService: Skipping TTS in Windows debug mode');
       return;
-    }
+    }*/
 
     final now = DateTime.now();
     if (now.difference(_lastSpokenAt) < const Duration(milliseconds: 500)) {

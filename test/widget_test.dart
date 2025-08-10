@@ -9,25 +9,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:humble_time_app/main.dart';
-import 'package:humble_time_app/models/time_log_entry.dart';
+//import 'package:humble_time_app/models/time_log_entry.dart';
 
-import 'package:flutter_tts/flutter_tts.dart';
+//import 'package:flutter_tts/flutter_tts.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
       // Build our app and trigger a frame.
-    final dummyEntries = [
+    /*final dummyEntries = [
       TimeLogEntry(
         startTime: DateTime.now(),
         endTime: DateTime.now().add(Duration(minutes: 25)),
         description: 'Test entry',
       ),
     ];
-    final dummyTts = FlutterTts();  
+    final dummyTts = FlutterTts();  */
   
     //await tester.pumpWidget(const HumbleApp());
-    await tester.pumpWidget(
+    /*await tester.pumpWidget(
       HumbleApp(entries: dummyEntries, tts: dummyTts),
+    );*/
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: HumbleApp(),
+      ),
     );
 
     // Verify that our counter starts at 0.

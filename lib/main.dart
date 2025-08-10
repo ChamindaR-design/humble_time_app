@@ -6,7 +6,7 @@ import 'package:humble_time_app/core/themes/app_theme.dart';
 import 'package:humble_time_app/services/voice_service.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/core/navigation/go_router.dart';
-import 'package:humble_time_app/core/providers/theme_provider.dart';
+//import 'package:humble_time_app/core/providers/theme_provider.dart';
 import 'package:humble_time_app/core/providers/localization_provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,6 +17,8 @@ import 'package:humble_time_app/utils/clean_malformed_reflections.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'services/hive_service.dart';
 import 'dart:developer' as dev;
+
+import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
@@ -43,72 +45,37 @@ void main() async {
   await Hive.initFlutter();
   await HiveService.init();
 
-  /*// 🔍 Print all reflections to console
-  final reflections = HiveService.getAllReflections();
-  for (final r in reflections) {
-    print(r.toString());
-  }
-
-  // 🔍 Print JSON export to console
-  final jsonString = await HiveService.exportToJson();
-  print('📦 Exported Reflections:\n$jsonString');  */
-
   if (!bool.fromEnvironment('dart.vm.product')) {
-    // 🔍 Print all reflections to console
     final reflections = HiveService.getAllReflections();
     for (final r in reflections) {
-      //print(r.toString());
       dev.log(r.toString(), name: 'ReflectionDump');
     }
 
-    // 🔍 Print JSON export to console
     final jsonString = await HiveService.exportToJson();
-    //print('📦 Exported Reflections:\n$jsonString');
     dev.log('📦 Exported Reflections:\n$jsonString', name: 'ReflectionExport');
   }
 
-  runApp(
-    ProviderScope(
-      child: HumbleApp(
-        entries: [
-          TimeLogEntry(
-            startTime: DateTime.parse('2025-07-25T08:00:00'),
-            endTime: DateTime.parse('2025-07-25T09:30:00'),
-            description: 'Flutter development session',
-          ),
-          TimeLogEntry(
-            startTime: DateTime.parse('2025-07-25T10:00:00'),
-            endTime: DateTime.parse('2025-07-25T10:45:00'),
-            description: 'Accessibility testing',
-          ),
-        ],
-        tts: FlutterTts(),
-      ),
-    ),
-  );
+  runApp(const ProviderScope(child: HumbleApp()));
 }
 
 class HumbleApp extends ConsumerWidget {
-  final List<TimeLogEntry> entries;
-  final FlutterTts tts;
-
-  const HumbleApp({
-    super.key,
-    required this.entries,
-    required this.tts,
-  });
+  const HumbleApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
+    //final entries = ref.watch(logEntriesProvider);
+    //final tts = ref.read(ttsProvider);
     final locale = ref.watch(localeProvider);
+    final settings = ref.watch(userSettingsProvider).settings;
 
     return MaterialApp.router(
       title: 'Humble Time Tracker',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: themeMode,
+      theme: AppTheme.themedLight(settings.colorPalette),
+      darkTheme: AppTheme.themedDark(settings.colorPalette),
+      themeMode: settings.preferredBrightness == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light,
       routerConfig: router,
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -126,7 +93,7 @@ class HumbleApp extends ConsumerWidget {
         return Stack(
           children: [
             if (child != null) child,
-            const VoiceInitializer(), // 👈 Ambient voice trigger
+            const VoiceInitializer(), // ✅ No const constructor issue
           ],
         );
       },
@@ -153,5 +120,8 @@ class _VoiceInitializerState extends State<VoiceInitializer> {
   }
 
   @override
-  Widget build(BuildContext context) => const SizedBox.shrink();
+  Widget build(BuildContext context) => Semantics(
+    label: 'Voice initializer for startup prompt',
+    child: SizedBox.shrink(),
+  );
 }

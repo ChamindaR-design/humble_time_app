@@ -12,6 +12,11 @@ class HiveService {
     await Hive.openBox<BlockReflection>(boxName);
   }
 
+  /// Opens the reflection box for direct access
+  static Future<Box<BlockReflection>> getReflectionBox() async {
+    return Hive.openBox<BlockReflection>(boxName);
+  }
+
   /// Saves a reflection using a composite timestamp key
   static Future<void> saveReflection(BlockReflection reflection) async {
     final box = Hive.box<BlockReflection>(boxName);

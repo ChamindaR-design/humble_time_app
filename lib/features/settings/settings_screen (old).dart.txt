@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:humble_time_app/core/providers/user_settings_provider.dart';
-import 'package:humble_time_app/services/hive_service.dart';
-import 'dart:developer' as dev;
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -33,7 +31,9 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Expanded Neurodivergent Layout'),
             subtitle: const Text('Extra spacing and reduced density'),
             value: settings.isLayoutExpanded,
+            //onChanged: settingsProvider.toggleLayoutSpacing, // Not alowing to toggle
             onChanged: settingsProvider.toggleLayoutExpanded,
+
             secondary: const Icon(Icons.format_line_spacing),
           ),
 
@@ -111,85 +111,6 @@ class SettingsScreen extends ConsumerWidget {
               }
             },
           ),
-
-          // 🛠️ Developer Tools (only in debug mode)
-          if (!bool.fromEnvironment('dart.vm.product')) ...[
-            const Divider(height: 40),
-            const Text('🛠️ Developer Tools',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-
-            ElevatedButton.icon(
-              icon: const Icon(Icons.download),
-              label: const Text('Export Reflections to Console'),
-              onPressed: () async {
-                final json = await HiveService.exportToJson();
-                dev.log('📦 Exported Reflections:\n$json', name: 'ReflectionExport');
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Reflections exported to console')),
-                  );
-                }
-              },
-            ),
-
-            const SizedBox(height: 8),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.delete_forever),
-              label: const Text('Clear All Reflections'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-              onPressed: () async {
-                await HiveService.clearAllReflections();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('All reflections cleared')),
-                  );
-                }
-              },
-            ),
-
-            const SizedBox(height: 8),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.restore),
-              label: const Text('Restore Reflections from JSON'),
-              onPressed: () async {
-                final controller = TextEditingController();
-                await showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: const Text('Paste JSON to Restore'),
-                    content: TextField(
-                      controller: controller,
-                      maxLines: 10,
-                      decoration: const InputDecoration(
-                        hintText: 'Paste exported JSON here',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final json = controller.text;
-                          await HiveService.restoreFromJson(json);
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Reflections restored')),
-                            );
-                          }
-                        },
-                        child: const Text('Restore'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
         ],
       ),
     );

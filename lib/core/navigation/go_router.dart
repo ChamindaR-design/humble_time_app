@@ -21,6 +21,10 @@ import 'package:humble_time_app/features/journal/journal_review_screen.dart' as 
 // Reflection history screen
 import 'package:humble_time_app/features/session/reflection_history_screen.dart';
 
+import 'package:humble_time_app/services/voice_service.dart';
+import 'package:humble_time_app/helpers/prompt_library.dart';
+import 'package:flutter/material.dart';
+
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [
@@ -51,7 +55,10 @@ final GoRouter router = GoRouter(
     // 🧱 Shell layout routes (share AppShell + BottomNavBar)
     ShellRoute(
       builder: (context, state, child) {
-        final showBackArrow = state.uri.path == '/journal-review';
+        final currentPath = state.uri.path;
+
+        final showBackArrow = currentPath == '/journal-review';
+
         final screenTitle = {
           '/journal-review': 'Journal Review',
           '/journal': 'Journal',
@@ -60,8 +67,18 @@ final GoRouter router = GoRouter(
           '/settings': 'Settings',
           '/pacing': 'Pacing',
           '/reflection-history': 'Reflection History',
+          '/actuals': 'Actuals',
+          '/scheduler': 'Scheduler',
+          '/time-mosaic-planner': 'Planner',
           '/': 'Home',
-        }[state.uri.path];
+        }[currentPath];
+
+        // 🔊 Trigger voice prompt based on route
+        Future.microtask(() {
+          final prompt = PromptLibrary.forRoute(currentPath);
+          debugPrint('Voice prompt for route: $currentPath → "$prompt"');
+          VoiceService.speak(prompt);
+        });
 
         return AppShell(
           title: screenTitle,
@@ -78,6 +95,9 @@ final GoRouter router = GoRouter(
         GoRoute(path: '/journal-review', builder: (_, _) => const review.JournalReviewScreen()),
         GoRoute(path: '/pacing', builder: (_, _) => const PacingScreen()),
         GoRoute(path: '/reflection-history', builder: (_, _) => const ReflectionHistoryScreen()),
+        GoRoute(path: '/actuals', builder: (_, _) => const ActualsScreen()),
+        GoRoute(path: '/scheduler', builder: (_, _) => const SchedulerScreen()),
+        GoRoute(path: '/time-mosaic-planner', builder: (_, _) => const TimeMosaicScreen()),
       ],
     ),
   ],

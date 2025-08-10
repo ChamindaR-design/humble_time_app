@@ -14,6 +14,10 @@ import 'package:humble_time_app/l10n/app_localizations.dart';
 import 'package:humble_time_app/models/time_log_entry.dart';
 import 'package:humble_time_app/utils/clean_malformed_reflections.dart';
 
+import 'package:hive_flutter/hive_flutter.dart';
+import 'services/hive_service.dart';
+import 'dart:developer' as dev;
+
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
   TimeLogEntry(
@@ -36,6 +40,32 @@ void main() async {
   await cleanMalformedReflections(); // Optional: only in dev
   await VoiceService.init();
   debugPrint('VoiceService initialized with TTS settings');
+  await Hive.initFlutter();
+  await HiveService.init();
+
+  /*// 🔍 Print all reflections to console
+  final reflections = HiveService.getAllReflections();
+  for (final r in reflections) {
+    print(r.toString());
+  }
+
+  // 🔍 Print JSON export to console
+  final jsonString = await HiveService.exportToJson();
+  print('📦 Exported Reflections:\n$jsonString');  */
+
+  if (!bool.fromEnvironment('dart.vm.product')) {
+    // 🔍 Print all reflections to console
+    final reflections = HiveService.getAllReflections();
+    for (final r in reflections) {
+      //print(r.toString());
+      dev.log(r.toString(), name: 'ReflectionDump');
+    }
+
+    // 🔍 Print JSON export to console
+    final jsonString = await HiveService.exportToJson();
+    //print('📦 Exported Reflections:\n$jsonString');
+    dev.log('📦 Exported Reflections:\n$jsonString', name: 'ReflectionExport');
+  }
 
   runApp(
     ProviderScope(

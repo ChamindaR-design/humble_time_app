@@ -7,7 +7,10 @@ import 'package:humble_time_app/services/session_logger.dart';
 import 'package:humble_time_app/widgets/block_timer_overlay.dart';
 // Optional: Uncomment if using vibration
 import 'package:vibration/vibration.dart';
+import 'package:humble_time_app/widgets/block_reflection_modal.dart';
 
+import 'package:humble_time_app/models/block_reflection.dart';
+import 'package:humble_time_app/services/hive_service.dart';
 
 class TimeMosaicScreen extends StatefulWidget {
   const TimeMosaicScreen({super.key});
@@ -117,7 +120,40 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
               : '$hour:00';
 
           return GestureDetector(
-            onTap: () => onStartBlock(hour),
+            onTap: () {
+              if (_selectedHour != hour || _secondsRemaining == 0) {
+                /*showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => BlockReflectionModal(
+                    hour: hour,
+                    onSave: (note, mood, label) {
+                      // (TODO): Save to Hive
+                      debugPrint('Reflection saved for $hour:00 → $note, $mood, $label');
+                    },
+                  ),
+                );*/
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => BlockReflectionModal(
+                    hour: hour,
+                    onSave: (note, mood, label) async {
+                      final reflection = BlockReflection(
+                        hour: hour,
+                        note: note,
+                        mood: mood,
+                        label: label,
+                      );
+                      await HiveService.saveReflection(reflection);
+                      debugPrint('Saved reflection: $reflection');
+                    },
+                  ),
+                );
+              } else {
+                onStartBlock(hour);
+              }
+            },
             child: Semantics(
               label: isSelected
                   ? 'Block $hour selected. Timer running. ${timerProgress.toStringAsFixed(2)} progress.'

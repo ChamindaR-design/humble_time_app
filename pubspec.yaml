@@ -27,7 +27,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   logging: ^1.2.0
-  logger: ^1.4.0
+  #logger: ^1.4.0
+  logger: ^2.0.2  
   vibration: ^1.7.4
 
 dependency_overrides:

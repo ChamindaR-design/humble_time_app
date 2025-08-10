@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/services/voice_service.dart';
+
 import 'package:humble_time_app/services/session_logger.dart';
-import 'package:humble_time_app/widgets/block_timer_overlay.dart';
-// Optional: Uncomment if using vibration
-import 'package:vibration/vibration.dart';
 
 
 class TimeMosaicScreen extends StatefulWidget {
@@ -23,10 +21,6 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
   Timer? _timer;
   int _secondsRemaining = 0;
 
-  // 🧠 Milestone flags
-  bool _hasAnnouncedHalfway = false;
-  bool _hasAnnouncedComplete = false;
-
   @override
   void initState() {
     super.initState();
@@ -37,45 +31,28 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
     setState(() {
       _selectedHour = hour;
       _secondsRemaining = _focusDuration.inSeconds;
-      _hasAnnouncedHalfway = false;
-      _hasAnnouncedComplete = false;
     });
 
     VoiceService.speak(PromptLibrary.forEvent('startBlock'));
     _timer?.cancel();
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining > 0) {
         setState(() => _secondsRemaining--);
-
-        final progress = timerProgress;
-
-        if (!_hasAnnouncedHalfway && progress >= 0.5) {
-          _hasAnnouncedHalfway = true;
-          VoiceService.speak('You’re halfway through. Keep going!');
-          // Optional haptic feedback
-          final hasVibrator = await Vibration.hasVibrator();
-          if (hasVibrator == true) {
-            Vibration.vibrate(duration: 100);
-          }
-        }
       } else {
         timer.cancel();
-        if (!_hasAnnouncedComplete) {
-          _hasAnnouncedComplete = true;
-          VoiceService.speak('Focus block complete. Well done!');
-          // Optional haptic feedback
-          final hasVibrator = await Vibration.hasVibrator();
-          if (hasVibrator == true) {
-            Vibration.vibrate(duration: 200);
-          }
-        }
         onCompleteBlock();
       }
     });
 
     debugPrint('Timer started for block: $hour:00');
   }
+
+/*  void onCompleteBlock() {
+    VoiceService.speak(PromptLibrary.forEvent('completeBlock'));
+    debugPrint('Block $_selectedHour completed.');
+    // (TODO): Log session to local storage or journaling history
+  }*/
 
   void onCompleteBlock() {
     VoiceService.speak(PromptLibrary.forEvent('completeBlock'));
@@ -85,10 +62,6 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
     debugPrint('Block $_selectedHour completed.');
   }
 
-  double get timerProgress {
-    if (_selectedHour == null || _focusDuration.inSeconds == 0) return 0.0;
-    return 1.0 - (_secondsRemaining / _focusDuration.inSeconds);
-  }
 
   @override
   void dispose() {
@@ -102,9 +75,14 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Time Mosaic'),
+        /*leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),*/
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
+          //onPressed: () => context.pop(), // ✅ go_router-friendly
+          onPressed: () => context.go('/'), // Navigate to home
         ),
       ),
       body: GridView.count(
@@ -118,35 +96,22 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
 
           return GestureDetector(
             onTap: () => onStartBlock(hour),
-            child: Semantics(
-              label: isSelected
-                  ? 'Block $hour selected. Timer running. ${timerProgress.toStringAsFixed(2)} progress.'
-                  : 'Block $hour. Tap to start timer.',
-              child: Container(
-                margin: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.tealAccent : Colors.blueGrey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                  border: isSelected
-                      ? Border.all(color: Colors.teal, width: 2)
-                      : null,
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
-                      timeDisplay,
-                      style: TextStyle(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: isSelected ? Colors.black : Colors.grey.shade800,
-                      ),
-                    ),
-                    if (isSelected)
-                      BlockTimerOverlay(
-                        progress: timerProgress,
-                        isRunning: _secondsRemaining > 0,
-                      ),
-                  ],
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.tealAccent : Colors.blueGrey.shade200,
+                borderRadius: BorderRadius.circular(8),
+                border: isSelected
+                    ? Border.all(color: Colors.teal, width: 2)
+                    : null,
+              ),
+              child: Center(
+                child: Text(
+                  timeDisplay,
+                  style: TextStyle(
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? Colors.black : Colors.grey.shade800,
+                  ),
                 ),
               ),
             ),
@@ -154,7 +119,7 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
         }).toList(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
+        currentIndex: 2, // Mosaic tab
         onTap: (index) {
           switch (index) {
             case 0:
@@ -164,6 +129,7 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
               context.go('/journal');
               break;
             case 2:
+              // Already here
               break;
           }
         },

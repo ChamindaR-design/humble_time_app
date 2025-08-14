@@ -15,8 +15,12 @@ class _VoiceInitializerState extends State<VoiceInitializer> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      VoiceService.speak(PromptLibrary.forEvent('startBlock'));
+    Future.microtask(() async {
+      if (!mounted) return;
+
+      final locale = Localizations.localeOf(context); // ✅ Extract Locale
+      final prompt = await PromptLibrary.forEvent('startBlock', locale); // ✅ Await async method
+      VoiceService.speak(prompt); // ✅ Pass resolved String
     });
   }
 

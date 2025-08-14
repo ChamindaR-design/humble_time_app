@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
-import 'package:humble_time_app/helpers/mood_resolver.dart';
 import 'package:humble_time_app/services/voice_service.dart';
 import 'package:hive/hive.dart';
 import 'package:humble_time_app/models/log_entry.dart';
@@ -13,7 +12,13 @@ class MoodScreen extends StatefulWidget {
 }
 
 class _MoodScreenState extends State<MoodScreen> {
-  final List<String> moodKeys = ['happy', 'neutral', 'confused', 'sad', 'joyful'];
+  final Map<String, String> moods = {
+    '🙂': 'Happy',
+    '😐': 'Neutral',
+    '😕': 'Confused',
+    '😢': 'Sad',
+    '😄': 'Joyful',
+  };
 
   @override
   void initState() {
@@ -22,19 +27,18 @@ class _MoodScreenState extends State<MoodScreen> {
   }
 
   Future<void> _initializeVoice() async {
-    if (!mounted) return;
-    final locale = Localizations.localeOf(context);
+    if (!mounted) return; // ✅ Guard against async context usage
+    final locale = Localizations.localeOf(context); // ✅ Extract early
     await VoiceService.init();
     final prompt = await PromptLibrary.forEvent('moodPrompt', locale);
     await VoiceService.speak(prompt);
   }
 
-  Future<void> handleMoodTap(String key) async {
-    final locale = Localizations.localeOf(context);
-    final label = MoodResolver.localizedLabel(context, key);
-    final emoji = MoodResolver.emojiFromKey(key) ?? '';
+  Future<void> handleMoodTap(String emoji, String label) async {
+    debugPrint('Mood selected: $emoji ($label)');
 
-    debugPrint('Mood selected: $emoji ($key)');
+    if (!mounted) return; // ✅ Guard against async context usage
+    final locale = Localizations.localeOf(context); // ✅ Extract early
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Selected mood: $label'), duration: const Duration(seconds: 1)),
@@ -50,7 +54,7 @@ class _MoodScreenState extends State<MoodScreen> {
       final latest = box.values.isNotEmpty ? box.values.last : null;
 
       if (latest != null) {
-        latest.mood = key; // ✅ Save raw key
+        latest.mood = label;
         await latest.save();
         debugPrint('Mood saved to latest LogEntry.');
       } else {
@@ -59,6 +63,8 @@ class _MoodScreenState extends State<MoodScreen> {
     } catch (e) {
       debugPrint('Error saving mood: $e');
     }
+
+    // Optional: navigation or pacing logic can go here
   }
 
   @override
@@ -74,15 +80,15 @@ class _MoodScreenState extends State<MoodScreen> {
       body: GridView.count(
         crossAxisCount: 3,
         padding: const EdgeInsets.all(16),
-        children: moodKeys.map((key) {
-          final emoji = MoodResolver.emojiFromKey(key)!;
-          final label = MoodResolver.localizedLabel(context, key);
+        children: moods.entries.map((entry) {
+          final emoji = entry.key;
+          final label = entry.value;
 
           return Semantics(
             label: "Mood: $label",
             button: true,
             child: InkWell(
-              onTap: () => handleMoodTap(key),
+              onTap: () => handleMoodTap(emoji, label),
               borderRadius: BorderRadius.circular(8),
               splashColor: const Color.fromRGBO(0, 128, 128, 0.3),
               child: Card(

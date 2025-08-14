@@ -63,7 +63,8 @@ import 'app_localizations_si.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,7 +72,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -83,106 +85,216 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('ja'),
-    Locale('si')
+    Locale('si'),
   ];
 
-  /// No description provided for @focusBlockTitle.
+  /// Title for a focus block section
   ///
   /// In en, this message translates to:
   /// **'Focus Block'**
   String get focusBlockTitle;
 
-  /// No description provided for @voiceFocusStart.
-  ///
-  /// In en, this message translates to:
-  /// **'Starting Focus Block'**
-  String get voiceFocusStart;
-
-  /// No description provided for @breakBlockTitle.
+  /// Title for a break block section
   ///
   /// In en, this message translates to:
   /// **'Break Block'**
   String get breakBlockTitle;
 
-  /// No description provided for @voiceBreakStart.
-  ///
-  /// In en, this message translates to:
-  /// **'Time for a break'**
-  String get voiceBreakStart;
-
-  /// No description provided for @mood.
-  ///
-  /// In en, this message translates to:
-  /// **'Mood'**
-  String get mood;
-
-  /// No description provided for @timeMosaicPlanner.
+  /// Title for the time mosaic planner screen
   ///
   /// In en, this message translates to:
   /// **'Time Mosaic Planner'**
   String get timeMosaicPlanner;
 
-  /// No description provided for @appTitle.
+  /// App title displayed in the UI
   ///
   /// In en, this message translates to:
   /// **'Humble Time Tracker'**
   String get appTitle;
 
-  /// No description provided for @logHistory.
+  /// Label for the log history screen
   ///
   /// In en, this message translates to:
   /// **'Log History'**
   String get logHistory;
 
-  /// No description provided for @actuals.
+  /// Label for actual time usage screen
   ///
   /// In en, this message translates to:
   /// **'Actuals'**
   String get actuals;
 
-  /// No description provided for @pacing.
+  /// Label for pacing screen
   ///
   /// In en, this message translates to:
   /// **'Pacing'**
   String get pacing;
 
-  /// No description provided for @scheduler.
+  /// Label for scheduler screen
   ///
   /// In en, this message translates to:
   /// **'Scheduler'**
   String get scheduler;
 
-  /// No description provided for @settings.
+  /// Label for settings screen
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
 
-  /// No description provided for @journalReview.
+  /// Label for journal review screen
   ///
   /// In en, this message translates to:
   /// **'Journal Review'**
   String get journalReview;
 
-  /// No description provided for @reflectionHistory.
+  /// Label for reflection history screen
   ///
   /// In en, this message translates to:
   /// **'Reflection History'**
   String get reflectionHistory;
+
+  /// Voice confirmation when language is changed
+  ///
+  /// In en, this message translates to:
+  /// **'Language switched to English'**
+  String get languageSwitched;
+
+  /// Voice prompt when a focus block begins. Encouraging and grounding tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Block started. Let’s stay present and keep pacing yourself.'**
+  String get voiceFocusStart;
+
+  /// Voice prompt when a focus block is completed. Affirming and reflective tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done. That was focused time well spent. Want to log how it felt?'**
+  String get voiceFocusComplete;
+
+  /// Voice prompt when idle time is detected. Curious and supportive tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks like there’s been a gap. Shall we restart your block or save progress?'**
+  String get voiceIdleDetected;
+
+  /// Voice prompt when a break block begins. Light and inviting tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for a break'**
+  String get voiceBreakStart;
+
+  /// Voice prompt asking for current mood. Gentle and open tone.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling right now?'**
+  String get voiceMoodPrompt;
+
+  /// Voice confirmation after mood is saved. Reassuring and smooth transition.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood saved. Let’s continue.'**
+  String get voiceMoodSaved;
+
+  /// Voice confirmation after mood is selected. Adaptive and affirming tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mood {mood} selected. Let\'s continue.'**
+  String voiceMoodSelected(String mood);
+
+  /// Voice prompt when user returns to the app. Warm and motivating tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back. Ready to build your next focus block?'**
+  String get voiceWelcomeBack;
+
+  /// Voice prompt when user exits a session. Friendly and considerate tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaving so soon? Want to save this session before you head out?'**
+  String get voiceLeavingSession;
+
+  /// Generic fallback voice prompt. Neutral and forward-moving tone.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s keep going.'**
+  String get voiceGenericFallback;
+
+  /// Label for mood selection
+  ///
+  /// In en, this message translates to:
+  /// **'Mood'**
+  String get mood;
+
+  /// Mood label: Happy (positive emotional state)
+  ///
+  /// In en, this message translates to:
+  /// **'Happy'**
+  String get moodHappy;
+
+  /// Mood label: Neutral (emotionally steady or indifferent)
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral'**
+  String get moodNeutral;
+
+  /// Mood label: Sad (low emotional state)
+  ///
+  /// In en, this message translates to:
+  /// **'Sad'**
+  String get moodSad;
+
+  /// Mood label: Crying (intense sadness or emotional release)
+  ///
+  /// In en, this message translates to:
+  /// **'Crying'**
+  String get moodCrying;
+
+  /// Mood label: Joyful (expressive happiness and delight)
+  ///
+  /// In en, this message translates to:
+  /// **'Joyful'**
+  String get moodJoyful;
+
+  /// Mood label: Angry (frustration or irritation)
+  ///
+  /// In en, this message translates to:
+  /// **'Angry'**
+  String get moodAngry;
+
+  /// Mood label: Surprised (unexpected reaction or shock)
+  ///
+  /// In en, this message translates to:
+  /// **'Surprised'**
+  String get moodSurprised;
+
+  /// Mood label: Confused (uncertainty or lack of clarity)
+  ///
+  /// In en, this message translates to:
+  /// **'Confused'**
+  String get moodConfused;
+
+  /// Mood label: Sleepy (low energy or drowsiness)
+  ///
+  /// In en, this message translates to:
+  /// **'Sleepy'**
+  String get moodSleepy;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -191,26 +303,28 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'ja', 'si'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'ja', 'si'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return AppLocalizationsEn();
-    case 'ja': return AppLocalizationsJa();
-    case 'si': return AppLocalizationsSi();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'si':
+      return AppLocalizationsSi();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

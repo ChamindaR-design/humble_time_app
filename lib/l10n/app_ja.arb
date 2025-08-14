@@ -1,18 +1,169 @@
 {
+  "@@locale": "ja",
+
   "focusBlockTitle": "集中ブロック",
-  "voiceFocusStart": "集中ブロックを開始します",
+  "@focusBlockTitle": {
+    "description": "集中ブロックセクションのタイトル"
+  },
+
   "breakBlockTitle": "休憩ブロック",
-  "voiceBreakStart": "休憩時間です",
-  "mood": "気分",
+  "@breakBlockTitle": {
+    "description": "休憩ブロックセクションのタイトル"
+  },
+
   "timeMosaicPlanner": "タイムモザイクプランナー",
-  "appTitle": "ハンブル・タイム・トラッカー",
-  "logHistory": "履歴ログ",
+  "@timeMosaicPlanner": {
+    "description": "タイムモザイクプランナー画面のタイトル"
+  },
+
+  "appTitle": "Humble Time Tracker",
+  "@appTitle": {
+    "description": "アプリのタイトル"
+  },
+
+  "logHistory": "ログ履歴",
+  "@logHistory": {
+    "description": "ログ履歴画面のラベル"
+  },
+
   "actuals": "実績",
+  "@actuals": {
+    "description": "実際の時間使用画面のラベル"
+  },
+
   "pacing": "ペーシング",
+  "@pacing": {
+    "description": "ペーシング画面のラベル"
+  },
+
   "scheduler": "スケジューラー",
+  "@scheduler": {
+    "description": "スケジューラー画面のラベル"
+  },
+
   "settings": "設定",
+  "@settings": {
+    "description": "設定画面のラベル"
+  },
+
   "journalReview": "ジャーナルレビュー",
-  "reflectionHistory": "振り返り履歴"
+  "@journalReview": {
+    "description": "ジャーナルレビュー画面のラベル"
+  },
+
+  "reflectionHistory": "振り返り履歴",
+  "@reflectionHistory": {
+    "description": "振り返り履歴画面のラベル"
+  },
+
+  "languageSwitched": "言語が日本語に変更されました",
+  "@languageSwitched": {
+    "description": "言語が変更されたときの音声確認メッセージ"
+  },
+
+  "voiceFocusStart": "集中ブロックを開始しました。今に意識を向けて、ペースを保ちましょう。",
+  "@voiceFocusStart": {
+    "description": "集中ブロック開始時の音声プロンプト。励ましと落ち着きのあるトーン。"
+  },
+
+  "voiceFocusComplete": "お疲れさまでした。集中した時間をしっかり使えましたね。気分を記録しますか？",
+  "@voiceFocusComplete": {
+    "description": "集中ブロック完了時の音声プロンプト。肯定的で振り返りを促すトーン。"
+  },
+
+  "voiceIdleDetected": "少し間が空いたようです。ブロックを再開しますか？それとも進捗を保存しますか？",
+  "@voiceIdleDetected": {
+    "description": "アイドル状態が検出されたときの音声プロンプト。優しく問いかけるトーン。"
+  },
+
+  "voiceBreakStart": "休憩の時間です",
+  "@voiceBreakStart": {
+    "description": "休憩ブロック開始時の音声プロンプト。軽やかでリラックスしたトーン。"
+  },
+
+  "voiceMoodPrompt": "今の気分はどうですか？",
+  "@voiceMoodPrompt": {
+    "description": "現在の気分を尋ねる音声プロンプト。穏やかで開かれたトーン。"
+  },
+
+  "voiceMoodSaved": "気分を保存しました。続けましょう。",
+  "@voiceMoodSaved": {
+    "description": "気分が保存された後の音声確認。安心感のあるトーン。"
+  },
+
+  "voiceMoodSelected": "「{mood}」が選択されました。続けましょう。",
+  "@voiceMoodSelected": {
+    "description": "気分が選択された後の音声確認。適応的で肯定的なトーン。",
+    "placeholders": {
+      "mood": {
+        "type": "String",
+        "example": "うれしい"
+      }
+    }
+  },
+
+  "voiceWelcomeBack": "おかえりなさい。次の集中ブロックを始めましょうか？",
+  "@voiceWelcomeBack": {
+    "description": "アプリに戻ってきたときの音声プロンプト。温かく前向きなトーン。"
+  },
+
+  "voiceLeavingSession": "もう終了しますか？このセッションを保存してから退出しますか？",
+  "@voiceLeavingSession": {
+    "description": "セッション終了時の音声プロンプト。配慮のあるトーン。"
+  },
+
+  "voiceGenericFallback": "続けましょう。",
+  "@voiceGenericFallback": {
+    "description": "汎用の音声プロンプト。中立的で前向きなトーン。"
+  },
+
+  "mood": "気分",
+  "@mood": {
+    "description": "気分選択のラベル"
+  },
+
+  "moodHappy": "うれしい",
+  "@moodHappy": {
+    "description": "気分ラベル：うれしい（前向きな感情）"
+  },
+
+  "moodNeutral": "普通",
+  "@moodNeutral": {
+    "description": "気分ラベル：普通（安定した感情）"
+  },
+
+  "moodSad": "悲しい",
+  "@moodSad": {
+    "description": "気分ラベル：悲しい（落ち込んだ感情）"
+  },
+
+  "moodCrying": "泣いている",
+  "@moodCrying": {
+    "description": "気分ラベル：泣いている（強い悲しみ）"
+  },
+
+  "moodJoyful": "喜び",
+  "@moodJoyful": {
+    "description": "気分ラベル：喜び（明るく満ち足りた感情）"
+  },
+
+  "moodAngry": "怒っている",
+  "@moodAngry": {
+    "description": "気分ラベル：怒っている（苛立ちや怒り）"
+  },
+
+  "moodSurprised": "驚き",
+  "@moodSurprised": {
+    "description": "気分ラベル：驚き（予期しない反応）"
+  },
+
+  "moodConfused": "混乱している",
+  "@moodConfused": {
+    "description": "気分ラベル：混乱している（理解できない状態）"
+  },
+
+  "moodSleepy": "眠い",
+  "@moodSleepy": {
+    "description": "気分ラベル：眠い（エネルギーが低く、眠気がある状態）"
+  }
 }
-
-

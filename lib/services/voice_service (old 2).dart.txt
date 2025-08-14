@@ -1,31 +1,9 @@
-import 'dart:io'; // Platform checks
+import 'dart:io'; // 👈 Platform checks
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
-/// Voice tone presets for different contexts
-enum VoiceProfile { calm, upbeat, instructional }
 
 class VoiceService {
   static final FlutterTts _tts = FlutterTts();
-
-  /// Applies a predefined voice profile
-  static Future<void> applyVoiceProfile(VoiceProfile profile) async {
-    _currentProfile = profile;
-    switch (profile) {
-      case VoiceProfile.calm:
-        await updateVoiceSettings(pitch: 0.9, rate: 0.4);
-        break;
-      case VoiceProfile.upbeat:
-        await updateVoiceSettings(pitch: 1.2, rate: 0.5);
-        break;
-      case VoiceProfile.instructional:
-        await updateVoiceSettings(pitch: 1.0, rate: 0.6);
-        break;
-    }
-
-    _log('VoiceService: Applied voice profile "$profile"');
-  }
 
   /// Whether voice prompts are enabled (can be toggled via settings screen)
   static bool isVoiceEnabled = true;
@@ -52,7 +30,6 @@ class VoiceService {
       await _tts.setSpeechRate(0.4);         // Calm pacing
       await _tts.setVolume(1.0);
       await _tts.awaitSpeakCompletion(true); // 🔊 Full delivery before reset
-      await applyVoiceProfile(VoiceProfile.calm);
 
       _log('VoiceService: Initialized with language "$preferredLanguage"');
     } catch (e) {
@@ -64,14 +41,8 @@ class VoiceService {
   static Future<void> speak(String text) async {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
-/*    // 🧯 Windows debug mode protection
-    if (Platform.isWindows && kDebugMode) {
-      _log('VoiceService: Skipping TTS in Windows debug mode');
-      return;
-    }*/
-
-/*    // 🧯 Safe Windows debug mode protection
-    if (!kIsWeb && Platform.isWindows && kDebugMode) {
+    // 🧯 Windows debug mode protection
+/*    if (Platform.isWindows && kDebugMode) {
       _log('VoiceService: Skipping TTS in Windows debug mode');
       return;
     }*/
@@ -131,54 +102,6 @@ class VoiceService {
     _log('VoiceService: Updated voice settings');
   }
 
-  /// Updates TTS language based on app locale
-  /*static Future<void> updateLanguageFromLocale(Locale locale) async {
-    final langCode = switch (locale.languageCode) {
-      'si' => 'si-LK', // Sinhala
-      'ja' => 'ja-JP', // Japanese
-      'en' => 'en-GB', // or 'en-US' based on preference
-      _ => 'en-US',    // fallback
-    };
-
-    try {
-      await _tts.setLanguage(langCode);
-      _log('VoiceService: Language updated to "$langCode"');
-    } catch (e) {
-      _log('VoiceService: Failed to update language — $e');
-    }
-  }*/
-  
-  static VoiceProfile? _currentProfile;
-  
-  static Future<void> updateLanguageFromLocale(Locale locale) async {
-    final requestedLang = switch (locale.languageCode) {
-      'si' => 'si-LK',
-      'ja' => 'ja-JP',
-      'en' => 'en-GB',
-      _ => 'en-US',
-    };
-
-    try {
-      final voices = await _tts.getLanguages ?? [];
-      _log('Available TTS languages: ${voices.join(', ')}');
-
-      final fallbackLang = voices.contains(requestedLang)
-          ? requestedLang
-          : (voices.contains('en-US') ? 'en-US' : voices.first);
-
-      await _tts.setLanguage(fallbackLang);
-      _log('VoiceService: Language updated to "$fallbackLang"');
-
-      if (requestedLang != fallbackLang) {
-        await speak('Voice not available in your language. Using fallback.');
-      }
-    } catch (e) {
-      _log('VoiceService: Failed to update language — $e');
-    }
-  }
-
-  static VoiceProfile? get currentProfile => _currentProfile;
-
   /// Optional: expose instance for advanced use
   static FlutterTts get instance => _tts;
 
@@ -186,5 +109,4 @@ class VoiceService {
   static void _log(String message) {
     if (enableLogging) debugPrint(message);
   }
-
 }

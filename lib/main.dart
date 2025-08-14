@@ -6,7 +6,6 @@ import 'package:humble_time_app/core/themes/app_theme.dart';
 import 'package:humble_time_app/services/voice_service.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:humble_time_app/core/navigation/go_router.dart';
-//import 'package:humble_time_app/core/providers/theme_provider.dart';
 import 'package:humble_time_app/core/providers/localization_provider.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,6 +18,8 @@ import 'services/hive_service.dart';
 import 'dart:developer' as dev;
 
 import 'package:humble_time_app/core/providers/user_settings_provider.dart';
+
+import 'package:flutter/foundation.dart';
 
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
@@ -45,7 +46,8 @@ void main() async {
   await Hive.initFlutter();
   await HiveService.init();
 
-  if (!bool.fromEnvironment('dart.vm.product')) {
+  //if (!bool.fromEnvironment('dart.vm.product')) {
+  if (!kReleaseMode) {
     final reflections = HiveService.getAllReflections();
     for (final r in reflections) {
       dev.log(r.toString(), name: 'ReflectionDump');
@@ -63,10 +65,11 @@ class HumbleApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //final entries = ref.watch(logEntriesProvider);
-    //final tts = ref.read(ttsProvider);
     final locale = ref.watch(localeProvider);
     final settings = ref.watch(userSettingsProvider).settings;
+
+    // 🔁 Sync TTS language with current locale
+    VoiceService.updateLanguageFromLocale(locale);
 
     return MaterialApp.router(
       title: 'Humble Time Tracker',
@@ -93,7 +96,7 @@ class HumbleApp extends ConsumerWidget {
         return Stack(
           children: [
             if (child != null) child,
-            const VoiceInitializer(), // ✅ No const constructor issue
+            const VoiceInitializer(),
           ],
         );
       },
@@ -112,16 +115,21 @@ class _VoiceInitializerState extends State<VoiceInitializer> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final startupPrompt = PromptLibrary.forEvent('startBlock');
+    Future.microtask(() async {
+      if (!mounted) return;
+
+      final locale = Localizations.localeOf(context); // ✅ Extract Locale
+      final startupPrompt = await PromptLibrary.forEvent('startBlock', locale); // ✅ Await async call
+
       debugPrint('VoiceInitializer: Startup prompt — "$startupPrompt"');
-      VoiceService.speak(startupPrompt);
+      VoiceService.speak(startupPrompt); // ✅ Pass resolved String
     });
   }
 
   @override
   Widget build(BuildContext context) => Semantics(
     label: 'Voice initializer for startup prompt',
-    child: SizedBox.shrink(),
+    child: const SizedBox.shrink(),
   );
 }
+

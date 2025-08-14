@@ -1,18 +1,169 @@
 {
   "@@locale": "si",
-  "focusBlockTitle": "ලක්ෂ්‍ය කාලය",
-  "voiceFocusStart": "ලක්ෂ්‍ය කාලය ආරම්භ වේ",
-  "breakBlockTitle": "විවේක කාලය",
-  "voiceBreakStart": "විවේක ගන්න වේලාවයි",
-  "mood": "භාවනාව",
-  "timeMosaicPlanner": "කාල මෝසැක් සැලසුම්කරු",
-  "appTitle": "Humble Time Tracker",
-  "logHistory": "ලඝු ඉතිහාසය",
-  "actuals": "සත්‍ය වාර්තා",
-  "pacing": "වේග සැලසුම",
-  "scheduler": "කාලසටහන් සකස්කරු",
-  "settings": "සැකසුම්",
-  "journalReview": "දායක සමාලෝචනය",
-  "reflectionHistory": "පැහැදිලි කිරීමේ ඉතිහාසය"
-}
 
+  "focusBlockTitle": "ලක්ෂ්‍ය කාලය",
+  "@focusBlockTitle": {
+    "description": "ලක්ෂ්‍ය කාලය කොටස සඳහා මාතෘකාව"
+  },
+
+  "breakBlockTitle": "විවේක කාලය",
+  "@breakBlockTitle": {
+    "description": "විවේක කාලය කොටස සඳහා මාතෘකාව"
+  },
+
+  "timeMosaicPlanner": "කාල මෝසැක් සැලසුම්කරු",
+  "@timeMosaicPlanner": {
+    "description": "කාල මෝසැක් සැලසුම්කරු තිරය සඳහා මාතෘකාව"
+  },
+
+  "appTitle": "Humble Time Tracker",
+  "@appTitle": {
+    "description": "යෙදුමේ නම"
+  },
+
+  "logHistory": "ලඝු ඉතිහාසය",
+  "@logHistory": {
+    "description": "ලඝු ඉතිහාසය තිරය සඳහා ලේබලය"
+  },
+
+  "actuals": "සත්‍ය වාර්තා",
+  "@actuals": {
+    "description": "සත්‍ය කාල භාවිතය තිරය සඳහා ලේබලය"
+  },
+
+  "pacing": "වේග සැලසුම",
+  "@pacing": {
+    "description": "වේග තිරය සඳහා ලේබලය"
+  },
+
+  "scheduler": "කාලසටහන් සකස්කරු",
+  "@scheduler": {
+    "description": "කාලසටහන් තිරය සඳහා ලේබලය"
+  },
+
+  "settings": "සැකසුම්",
+  "@settings": {
+    "description": "සැකසුම් තිරය සඳහා ලේබලය"
+  },
+
+  "journalReview": "දායක සමාලෝචනය",
+  "@journalReview": {
+    "description": "දායක සමාලෝචන තිරය සඳහා ලේබලය"
+  },
+
+  "reflectionHistory": "පැහැදිලි කිරීමේ ඉතිහාසය",
+  "@reflectionHistory": {
+    "description": "පැහැදිලි කිරීමේ ඉතිහාසය තිරය සඳහා ලේබලය"
+  },
+
+  "languageSwitched": "භාෂාව සිංහලට මාරු විය",
+  "@languageSwitched": {
+    "description": "භාෂාව වෙනස් වූ විට පෙනෙන/ඇසෙන පණිවිඩය"
+  },
+
+  "voiceFocusStart": "ලක්ෂ්‍ය කාලය ආරම්භ විය. දැන් පැහැදිලිව සිටින්න.",
+  "@voiceFocusStart": {
+    "description": "ලක්ෂ්‍ය කාලය ආරම්භ වන විට පණිවිඩය. උනන්දුව සහිත ස්වරය."
+  },
+
+  "voiceFocusComplete": "ඔබ හොඳින් කටයුතු කළා. ලක්ෂ්‍ය කාලය සුරකින්නද?",
+  "@voiceFocusComplete": {
+    "description": "ලක්ෂ්‍ය කාලය අවසන් වූ විට පණිවිඩය. ප්‍රශංසා සහිත ස්වරය."
+  },
+
+  "voiceIdleDetected": "ඔබ තාවකාලිකව නවතා ඇත. නැවත ආරම්භ කරන්නද නැත්නම් සුරකින්නද?",
+  "@voiceIdleDetected": {
+    "description": "අක්‍රියතාවය අනාවරණය වූ විට පණිවිඩය. උදව්කාරී ස්වරය."
+  },
+
+  "voiceBreakStart": "විවේක ගන්න වේලාවයි",
+  "@voiceBreakStart": {
+    "description": "විවේක කාලය ආරම්භ වන විට පණිවිඩය. සන්සුන් ස්වරය."
+  },
+
+  "voiceMoodPrompt": "ඔබේ වර්තමාන භාවනාව කුමක්ද?",
+  "@voiceMoodPrompt": {
+    "description": "භාවනාව විමසන පණිවිඩය. මෘදු ස්වරය."
+  },
+
+  "voiceMoodSaved": "භාවනාව සුරකින ලදී. ඉදිරියට යමු.",
+  "@voiceMoodSaved": {
+    "description": "භාවනාව සුරකින ලද පසු පණිවිඩය. ආරක්ෂාකාරී ස්වරය."
+  },
+
+  "voiceMoodSelected": "{mood} ලෙස භාවනාව තෝරාගෙන ඇත. ඉදිරියට යමු.",
+  "@voiceMoodSelected": {
+    "description": "භාවනාව තෝරාගත් පසු පණිවිඩය. තහවුරු සහිත ස්වරය.",
+    "placeholders": {
+      "mood": {
+        "type": "String",
+        "example": "සතුටු"
+      }
+    }
+  },
+
+  "voiceWelcomeBack": "ආයුබෝවන්! නැවත ආරම්භ කරන්නද?",
+  "@voiceWelcomeBack": {
+    "description": "යෙදුමට ආපසු පැමිණි විට පණිවිඩය. උද්යෝගිමත් ස්වරය."
+  },
+
+  "voiceLeavingSession": "ඔබ පිටවීමට සූදානම්ද? මෙම සැසිය සුරකින්නද?",
+  "@voiceLeavingSession": {
+    "description": "සැසියෙන් පිටවෙන විට පණිවිඩය. සැලකිලිමත් ස්වරය."
+  },
+
+  "voiceGenericFallback": "ඉදිරියට යමු.",
+  "@voiceGenericFallback": {
+    "description": "සාමාන්‍ය පණිවිඩය (පිළියෙල නොවූ අවස්ථාවන් සඳහා)"
+  },
+
+  "mood": "භාවනාව",
+  "@mood": {
+    "description": "භාවනාව තේරීම සඳහා ලේබලය"
+  },
+
+  "moodHappy": "සතුටු",
+  "@moodHappy": {
+    "description": "භාවනාව: සතුටු (සාමාන්‍ය සතුටු තත්ත්වය)"
+  },
+
+  "moodNeutral": "සාමාන්‍ය",
+  "@moodNeutral": {
+    "description": "භාවනාව: සාමාන්‍ය (නොවෙනස් වූ තත්ත්වය)"
+  },
+
+  "moodSad": "දුකින්",
+  "@moodSad": {
+    "description": "භාවනාව: දුකින් (අවපීඩිත තත්ත්වය)"
+  },
+
+  "moodCrying": "අඬනවා",
+  "@moodCrying": {
+    "description": "භාවනාව: අඬනවා (බරපතල දුක)"
+  },
+
+  "moodJoyful": "සතුටු",
+  "@moodJoyful": {
+    "description": "භාවනාව: සතුටු (සතුටින් පිරුණු තත්ත්වය)"
+  },
+
+  "moodAngry": "කෝපයෙන්",
+  "@moodAngry": {
+    "description": "භාවනාව: කෝපයෙන් (අසතුටු සහ තද කෝපය)"
+  },
+
+  "moodSurprised": "පුදුමයෙන්",
+  "@moodSurprised": {
+    "description": "භාවනාව: පුදුමයෙන් (අපේක්ෂිත නොවූ ප්‍රතිචාරය)"
+  },
+
+  "moodConfused": "අවුල්වීම",
+  "@moodConfused": {
+    "description": "භාවනාව: අවුල්වීම (අසීරු තේරුමක්)"
+  },
+
+  "moodSleepy": "නිදාගන්නටයි",
+  "@moodSleepy": {
+    "description": "භාවනාව: නිදාගන්නටයි (අඩු ශක්තිය සහ නිදා ගැනීමේ අවශ්‍යතාව)"
+  }
+}

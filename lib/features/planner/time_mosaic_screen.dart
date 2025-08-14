@@ -34,19 +34,28 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
   @override
   void initState() {
     super.initState();
-    VoiceService.speak(PromptLibrary.forEvent('welcomeBack'));
+    _initializeVoice();
     loadReflections();
   }
 
+  Future<void> _initializeVoice() async {
+    if (!mounted) return;
+    final locale = Localizations.localeOf(context);
+    final prompt = await PromptLibrary.forEvent('welcomeBack', locale);
+    await VoiceService.speak(prompt);
+  }
+
   Future<void> loadReflections() async {
-    //final box = await HiveService.openReflectionBox();
     final box = await HiveService.getReflectionBox();
     setState(() {
       _reflections = box.values.toList().cast<BlockReflection>();
     });
   }
 
-  void onStartBlock(int hour) {
+  void onStartBlock(int hour) async {
+    if (!mounted) return;
+    final locale = Localizations.localeOf(context);
+
     setState(() {
       _selectedHour = hour;
       _secondsRemaining = _focusDuration.inSeconds;
@@ -54,7 +63,8 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
       _hasAnnouncedComplete = false;
     });
 
-    VoiceService.speak(PromptLibrary.forEvent('startBlock'));
+    final prompt = await PromptLibrary.forEvent('startBlock', locale);
+    await VoiceService.speak(prompt);
     _timer?.cancel();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
@@ -65,7 +75,7 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
 
         if (!_hasAnnouncedHalfway && progress >= 0.5) {
           _hasAnnouncedHalfway = true;
-          VoiceService.speak('You’re halfway through. Keep going!');
+          await VoiceService.speak('You’re halfway through. Keep going!');
           final hasVibrator = await Vibration.hasVibrator();
           if (hasVibrator == true) {
             Vibration.vibrate(duration: 100);
@@ -75,7 +85,7 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
         timer.cancel();
         if (!_hasAnnouncedComplete) {
           _hasAnnouncedComplete = true;
-          VoiceService.speak('Focus block complete. Well done!');
+          await VoiceService.speak('Focus block complete. Well done!');
           final hasVibrator = await Vibration.hasVibrator();
           if (hasVibrator == true) {
             Vibration.vibrate(duration: 200);
@@ -88,8 +98,12 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
     debugPrint('Timer started for block: $hour:00');
   }
 
-  void onCompleteBlock() {
-    VoiceService.speak(PromptLibrary.forEvent('completeBlock'));
+  void onCompleteBlock() async {
+    if (!mounted) return;
+    final locale = Localizations.localeOf(context);
+    final prompt = await PromptLibrary.forEvent('completeBlock', locale);
+    await VoiceService.speak(prompt);
+
     if (_selectedHour != null) {
       SessionLogger.logBlock(_selectedHour!);
     }
@@ -113,18 +127,6 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
 
     return BlockStatus.idle;
   }
-
-  /*Color getBlockColor(BlockStatus status) {
-    switch (status) {
-      case BlockStatus.completed:
-        return Colors.greenAccent;
-      case BlockStatus.idle:
-        return Colors.yellowAccent;
-      case BlockStatus.skipped:
-        return Colors.redAccent;
-    }
-    return Colors.grey; // fallback
-  }*/
 
   Color getBlockColor(BlockStatus status) {
     switch (status) {
@@ -174,7 +176,6 @@ class _TimeMosaicScreenState extends State<TimeMosaicScreen> {
     VoiceService.stop();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

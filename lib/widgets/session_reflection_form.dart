@@ -3,6 +3,9 @@ import 'accessible_text.dart';
 import '../services/voice_service.dart';
 import '../core/utils/ui_toolkit.dart';
 
+import '../helpers/mood_localization_helper.dart';
+import 'package:humble_time_app/l10n/app_localizations.dart';
+
 class SessionReflectionForm extends StatelessWidget {
   final Function(String mood, String reflection) onSubmit;
   final UIToolkit toolkit = UIToolkit(); // ✅ non-const initialized instance
@@ -44,9 +47,21 @@ class SessionReflectionForm extends StatelessWidget {
           toolkit.verticalSpace(context, 3.0),
           Center(
             child: ElevatedButton(
-              onPressed: () {
+              /*onPressed: () {
                 VoiceService.speak('Reflection saved. Take a deep breath.');
                 onSubmit(moodController.text, reflectionController.text);
+              },*/
+              onPressed: () {
+                final moodKey = moodController.text.trim();
+                final reflection = reflectionController.text.trim();
+
+                final moodLabel = localizedMoodLabel(context, moodKey);
+                //final prompt = AppLocalizations.of(context).voiceMoodSelected(moodLabel);
+                final prompt = AppLocalizations.of(context)!.voiceMoodSelected(moodLabel);
+
+
+                VoiceService.speak(prompt); // ✅ Localized voice feedback
+                onSubmit(moodKey, reflection);
               },
               child: Text(
                 'Submit',

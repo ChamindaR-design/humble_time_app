@@ -1,17 +1,167 @@
 {
   "focusBlockTitle": "Focus Block",
-  "voiceFocusStart": "Starting Focus Block",
-  "breakBlockTitle": "Break Block",
-  "voiceBreakStart": "Time for a break",
-  "mood": "Mood",
-  "timeMosaicPlanner": "Time Mosaic Planner",
-  "appTitle": "Humble Time Tracker",
-  "logHistory": "Log History",
-  "actuals": "Actuals",
-  "pacing": "Pacing",
-  "scheduler": "Scheduler",
-  "settings": "Settings",
-  "journalReview": "Journal Review",
-  "reflectionHistory": "Reflection History"
-}
+  "@focusBlockTitle": {
+    "description": "Title for a focus block section"
+  },
 
+  "breakBlockTitle": "Break Block",
+  "@breakBlockTitle": {
+    "description": "Title for a break block section"
+  },
+
+  "timeMosaicPlanner": "Time Mosaic Planner",
+  "@timeMosaicPlanner": {
+    "description": "Title for the time mosaic planner screen"
+  },
+
+  "appTitle": "Humble Time Tracker",
+  "@appTitle": {
+    "description": "App title displayed in the UI"
+  },
+
+  "logHistory": "Log History",
+  "@logHistory": {
+    "description": "Label for the log history screen"
+  },
+
+  "actuals": "Actuals",
+  "@actuals": {
+    "description": "Label for actual time usage screen"
+  },
+
+  "pacing": "Pacing",
+  "@pacing": {
+    "description": "Label for pacing screen"
+  },
+
+  "scheduler": "Scheduler",
+  "@scheduler": {
+    "description": "Label for scheduler screen"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Label for settings screen"
+  },
+
+  "journalReview": "Journal Review",
+  "@journalReview": {
+    "description": "Label for journal review screen"
+  },
+
+  "reflectionHistory": "Reflection History",
+  "@reflectionHistory": {
+    "description": "Label for reflection history screen"
+  },
+
+  "languageSwitched": "Language switched to English",
+  "@languageSwitched": {
+    "description": "Voice confirmation when language is changed"
+  },
+
+  "voiceFocusStart": "Block started. Let’s stay present and keep pacing yourself.",
+  "@voiceFocusStart": {
+    "description": "Voice prompt when a focus block begins. Encouraging and grounding tone."
+  },
+
+  "voiceFocusComplete": "Well done. That was focused time well spent. Want to log how it felt?",
+  "@voiceFocusComplete": {
+    "description": "Voice prompt when a focus block is completed. Affirming and reflective tone."
+  },
+
+  "voiceIdleDetected": "Looks like there’s been a gap. Shall we restart your block or save progress?",
+  "@voiceIdleDetected": {
+    "description": "Voice prompt when idle time is detected. Curious and supportive tone."
+  },
+
+  "voiceBreakStart": "Time for a break",
+  "@voiceBreakStart": {
+    "description": "Voice prompt when a break block begins. Light and inviting tone."
+  },
+
+  "voiceMoodPrompt": "How are you feeling right now?",
+  "@voiceMoodPrompt": {
+    "description": "Voice prompt asking for current mood. Gentle and open tone."
+  },
+
+  "voiceMoodSaved": "Mood saved. Let’s continue.",
+  "@voiceMoodSaved": {
+    "description": "Voice confirmation after mood is saved. Reassuring and smooth transition."
+  },
+
+  "voiceMoodSelected": "Mood {mood} selected. Let's continue.",
+  "@voiceMoodSelected": {
+    "description": "Voice confirmation after mood is selected. Adaptive and affirming tone.",
+    "placeholders": {
+      "mood": {
+        "type": "String",
+        "example": "Happy"
+      }
+    }
+  },
+
+  "voiceWelcomeBack": "Welcome back. Ready to build your next focus block?",
+  "@voiceWelcomeBack": {
+    "description": "Voice prompt when user returns to the app. Warm and motivating tone."
+  },
+
+  "voiceLeavingSession": "Leaving so soon? Want to save this session before you head out?",
+  "@voiceLeavingSession": {
+    "description": "Voice prompt when user exits a session. Friendly and considerate tone."
+  },
+
+  "voiceGenericFallback": "Let's keep going.",
+  "@voiceGenericFallback": {
+    "description": "Generic fallback voice prompt. Neutral and forward-moving tone."
+  },
+
+  "mood": "Mood",
+  "@mood": {
+    "description": "Label for mood selection"
+  },
+
+  "moodHappy": "Happy",
+  "@moodHappy": {
+    "description": "Mood label: Happy (positive emotional state)"
+  },
+
+  "moodNeutral": "Neutral",
+  "@moodNeutral": {
+    "description": "Mood label: Neutral (emotionally steady or indifferent)"
+  },
+
+  "moodSad": "Sad",
+  "@moodSad": {
+    "description": "Mood label: Sad (low emotional state)"
+  },
+
+  "moodCrying": "Crying",
+  "@moodCrying": {
+    "description": "Mood label: Crying (intense sadness or emotional release)"
+  },
+
+  "moodJoyful": "Joyful",
+  "@moodJoyful": {
+    "description": "Mood label: Joyful (expressive happiness and delight)"
+  },
+
+  "moodAngry": "Angry",
+  "@moodAngry": {
+    "description": "Mood label: Angry (frustration or irritation)"
+  },
+
+  "moodSurprised": "Surprised",
+  "@moodSurprised": {
+    "description": "Mood label: Surprised (unexpected reaction or shock)"
+  },
+
+  "moodConfused": "Confused",
+  "@moodConfused": {
+    "description": "Mood label: Confused (uncertainty or lack of clarity)"
+  },
+
+  "moodSleepy": "Sleepy",
+  "@moodSleepy": {
+    "description": "Mood label: Sleepy (low energy or drowsiness)"
+  }
+}

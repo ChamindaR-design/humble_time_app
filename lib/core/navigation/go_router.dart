@@ -33,8 +33,6 @@ import 'package:humble_time_app/models/time_block.dart';
 import 'package:humble_time_app/features/session/session_reflection_screen.dart';
 import 'package:humble_time_app/models/log_entry.dart';
 
-
-
 final GoRouter router = GoRouter(
   initialLocation: '/',
   routes: [

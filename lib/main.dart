@@ -21,6 +21,10 @@ import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 
 import 'package:flutter/foundation.dart';
 
+//Actuals Screens
+import 'package:humble_time_app/models/actuals_entry.dart';
+import 'package:humble_time_app/features/actuals/services/actuals_store.dart';
+
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
   TimeLogEntry(
@@ -38,7 +42,7 @@ final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
 /// Provider for global FlutterTts instance
 final ttsProvider = Provider<FlutterTts>((ref) => FlutterTts());
 
-void main() async {
+/*void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await cleanMalformedReflections(); // Optional: only in dev
   await VoiceService.init();
@@ -47,6 +51,36 @@ void main() async {
   await HiveService.init();
 
   //if (!bool.fromEnvironment('dart.vm.product')) {
+  if (!kReleaseMode) {
+    final reflections = HiveService.getAllReflections();
+    for (final r in reflections) {
+      dev.log(r.toString(), name: 'ReflectionDump');
+    }
+
+    final jsonString = await HiveService.exportToJson();
+    dev.log('📦 Exported Reflections:\n$jsonString', name: 'ReflectionExport');
+  }
+
+  runApp(const ProviderScope(child: HumbleApp()));
+}*/
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await cleanMalformedReflections();
+  await VoiceService.init();
+  debugPrint('VoiceService initialized with TTS settings');
+
+  await Hive.initFlutter();
+
+  // ✅ Register ActualsEntry adapter
+  Hive.registerAdapter(ActualsEntryAdapter());
+  await Hive.openBox<ActualsEntry>('actualsEntries');
+
+  // ✅ Register BlockReflection adapter (already present)
+  await HiveService.init();
+
+  // ✅ Load persisted actuals into store
+  await ActualsStore.instance.init();
+
   if (!kReleaseMode) {
     final reflections = HiveService.getAllReflections();
     for (final r in reflections) {

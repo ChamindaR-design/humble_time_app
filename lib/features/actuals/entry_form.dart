@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class EntryForm extends StatefulWidget {
-  const EntryForm({super.key});
+  final Future<void> Function(String) onSaved;
+
+  const EntryForm({
+    super.key,
+    required this.onSaved,
+  });
 
   @override
   State<EntryForm> createState() => _EntryFormState();
@@ -25,20 +31,24 @@ class _EntryFormState extends State<EntryForm> {
     await _flutterTts.setPitch(1.0);
   }
 
-  void _speak(String message) async {
+  Future<void> _speak(String message) async {
     await _flutterTts.speak(message);
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     final text = _entryController.text.trim();
     if (text.isNotEmpty) {
-      _speak("Got it. Entry saved: $text");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Entry saved successfully")),
-      );
+      await widget.onSaved(text);
+      await _speak("Nice work. Entry saved: $text");
+      HapticFeedback.selectionClick();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Entry saved successfully")),
+        );
+      }
       _entryController.clear();
     } else {
-      _speak("You haven’t typed anything yet.");
+      await _speak("You haven’t typed anything yet.");
     }
   }
 
@@ -52,21 +62,27 @@ class _EntryFormState extends State<EntryForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          controller: _entryController,
-          decoration: const InputDecoration(
-            labelText: "Your entry",
-            border: OutlineInputBorder(),
+        Semantics(
+          label: 'Enter the details of your completed task',
+          child: TextField(
+            controller: _entryController,
+            decoration: const InputDecoration(
+              labelText: "Your entry",
+              border: OutlineInputBorder(),
+            ),
+            maxLines: null,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _handleSubmit(),
           ),
-          maxLines: null,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _handleSubmit(),
         ),
-        const SizedBox(height: 20),
-        ElevatedButton.icon(
-          icon: const Icon(Icons.save),
-          label: const Text("Save Entry"),
-          onPressed: _handleSubmit,
+        const SizedBox(height: 12),
+        Semantics(
+          label: 'Save entry button',
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            label: const Text("Save Entry"),
+            onPressed: _handleSubmit,
+          ),
         ),
       ],
     );

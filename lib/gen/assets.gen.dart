@@ -57,6 +57,9 @@ class $LibL10nGen {
   /// File path: lib/l10n/l10n.dart
   String get l10n => 'lib/l10n/l10n.dart';
 
+  /// File path: lib/l10n/mood_label_resolver.dart
+  String get moodLabelResolver => 'lib/l10n/mood_label_resolver.dart';
+
   /// List of all assets
   List<String> get values => [
         appEn,
@@ -68,7 +71,8 @@ class $LibL10nGen {
         appSi,
         flutterLocalizations,
         humbleLocalizations,
-        l10n
+        l10n,
+        moodLabelResolver
       ];
 }
 

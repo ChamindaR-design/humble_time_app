@@ -5,7 +5,7 @@ import 'package:humble_time_app/core/navigation/app_shell.dart';
 import 'package:humble_time_app/features/home/home_screen.dart';
 import 'package:humble_time_app/features/log/log_screen.dart';
 import 'package:humble_time_app/features/actuals/actuals_screen.dart';
-import 'package:humble_time_app/features/scheduler/scheduler_screen.dart';
+import 'package:humble_time_app/features/scheduler/screens/scheduler_screen.dart';
 import 'package:humble_time_app/features/planner/time_mosaic_screen.dart';
 
 // Shell-wrapped screens
@@ -19,11 +19,21 @@ import 'package:humble_time_app/features/journal/journal_main_screen.dart' as ma
 import 'package:humble_time_app/features/journal/journal_review_screen.dart' as review;
 
 // Reflection history screen
-import 'package:humble_time_app/features/session/reflection_history_screen.dart';
+import 'package:humble_time_app/features/reflection/screens/reflection_history_screen.dart';
 
 import 'package:humble_time_app/services/voice_service.dart';
 import 'package:humble_time_app/helpers/prompt_library.dart';
 import 'package:flutter/material.dart';
+
+// Scheduler Screen
+import 'package:humble_time_app/features/scheduler/screens/block_session_screen.dart';
+import 'package:humble_time_app/models/time_block.dart';
+
+// Reflection Screens
+import 'package:humble_time_app/features/session/session_reflection_screen.dart';
+import 'package:humble_time_app/models/log_entry.dart';
+
+
 
 final GoRouter router = GoRouter(
   initialLocation: '/',
@@ -50,7 +60,49 @@ final GoRouter router = GoRouter(
       name: 'reflectionHistory',
       builder: (_, _) => const ReflectionHistoryScreen(),
     ),*/
-
+    GoRoute(
+      path: '/session',
+      builder: (context, state) {
+        /*final block = state.extra as TimeBlock;
+        return BlockSessionScreen(block: block);*/
+        final block = state.extra;
+        if (block is! TimeBlock) {
+          throw Exception('Expected TimeBlock in /session route');
+        }
+        return BlockSessionScreen(block: block);
+      },
+    ),
+    /*GoRoute(
+      name: 'reflection',
+      path: '/reflection',
+      builder: (context, state) {
+        final entry = state.extra;
+        if (entry is! LogEntry) {
+          throw Exception('Expected LogEntry in /reflection route');
+        }
+        return SessionReflectionScreen(entry: entry);
+      },
+    ),*/
+    GoRoute(
+      name: 'reflection',
+      path: '/reflection',
+      builder: (context, state) {
+        final entry = state.extra;
+        if (entry is! LogEntry) {
+          debugPrint('⚠️ /reflection triggered without LogEntry. Showing fallback.');
+          return Scaffold(
+            appBar: AppBar(title: const Text('Reflection')),
+            body: const Center(
+              child: Text(
+                'No session data found.\nPlease select a log entry first.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
+        return SessionReflectionScreen(entry: entry);
+      },
+    ),
 
     // 🧱 Shell layout routes (share AppShell + BottomNavBar)
     ShellRoute(

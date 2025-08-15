@@ -4,6 +4,7 @@ import 'package:humble_time_app/l10n/humble_localizations.dart';
 import 'package:humble_time_app/widgets/narrated_text.dart';
 import 'package:humble_time_app/features/pacing/voice_initializer.dart'; // 👈 Add this import
 
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

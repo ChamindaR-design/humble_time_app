@@ -6,7 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:humble_time_app/features/session/session_notifier.dart';
 import 'package:humble_time_app/models/session.dart'; // ✅ for Session
 import 'package:humble_time_app/models/log_entry.dart';
-import 'package:humble_time_app/features/session/reflection_screen.dart'; // ✅ for ReflectionScreen
+import 'package:humble_time_app/features/session/session_reflection_screen.dart'; // ✅ for ReflectionScreen
 
 class PacingScreen extends ConsumerStatefulWidget {
   const PacingScreen({super.key});
@@ -121,7 +121,7 @@ class _PacingScreenState extends ConsumerState<PacingScreen> {
 
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => ReflectionScreen(entry: entry)),
+      MaterialPageRoute(builder: (_) => SessionReflectionScreen(entry: entry)),
     );
   }
 

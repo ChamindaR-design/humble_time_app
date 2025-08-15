@@ -348,6 +348,7 @@ class SettingsScreen extends ConsumerWidget {
     return DropdownButton<Duration>(
       value: current,
       items: [
+        const Duration(minutes: 1),
         const Duration(minutes: 5),
         const Duration(minutes: 15),
         const Duration(minutes: 25),

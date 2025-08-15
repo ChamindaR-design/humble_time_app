@@ -5,6 +5,9 @@ import 'package:humble_time_app/services/voice_service.dart';
 import 'package:hive/hive.dart';
 import 'package:humble_time_app/models/log_entry.dart';
 
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+
 class MoodScreen extends StatefulWidget {
   const MoodScreen({super.key});
 
@@ -70,7 +73,19 @@ class _MoodScreenState extends State<MoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mood Tracker')),
+      //appBar: AppBar(title: const Text('Mood Tracker')),
+      appBar: AppBar(
+        title: const Text('Mood Tracker'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'Back to Home',
+          onPressed: () {
+            HapticFeedback.selectionClick();
+            VoiceService.speak("Returning to Home");
+            context.go('/');
+          },
+        ),
+      ),
       body: GridView.count(
         crossAxisCount: 3,
         padding: const EdgeInsets.all(16),

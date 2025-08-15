@@ -1,0 +1,132 @@
+import 'package:flutter/material.dart';
+import 'package:humble_time_app/features/scheduler/widgets/schedule_block.dart';
+import 'package:humble_time_app/features/scheduler/widgets/block_timeline_view.dart';
+import 'package:humble_time_app/models/time_block.dart';
+
+class SchedulerBody extends StatelessWidget {
+  final List<TimeBlock> blocks;
+  final void Function(TimeBlock block, int index) onEdit;
+  final VoidCallback onStart;
+
+  const SchedulerBody({
+    required this.blocks,
+    required this.onEdit,
+    required this.onStart,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //print('Rendering ${blocks.length} scheduled blocks'); // 🧠 Debug print
+
+    return CustomScrollView(
+      slivers: [
+        // 🧠 Top margin to push layout down
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 12),
+        ),
+
+        // 🧠 Timeline strip
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: BlockTimelineView(
+              blocks: blocks,
+              onBlockTap: (block) {
+                final index = blocks.indexOf(block);
+                if (index != -1) {
+                  onEdit(block, index);
+                }
+              },
+            ),
+          ),
+        ),
+
+        // 🎯 Start Block button
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            child: Semantics(
+              label: 'Start block button',
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.play_arrow),
+                label: const Text('Start Block'),
+                onPressed: onStart,
+              ),
+            ),
+          ),
+        ),
+
+        // 📭 Empty state fallback
+        if (blocks.isEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Center(
+                child: Text(
+                  'No blocks scheduled.\nTap “Start Block” to begin.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ),
+          ),
+
+        /*// 🧪 Debug placeholder to confirm layout
+        if (blocks.isNotEmpty)
+          SliverToBoxAdapter(
+            child: Container(
+              height: 80,
+              color: Colors.redAccent,
+              child: const Center(
+                child: Text(
+                  'Scheduled blocks should appear below',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),*/
+
+        // 🏷️ Optional section heading
+        if (blocks.isNotEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                'Your Plan',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          ),
+
+        // 📋 Scheduled blocks list
+        if (blocks.isNotEmpty)
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final block = blocks[index];
+                return Semantics(
+                  label: 'Scheduled block: ${block.label}',
+                  child: GestureDetector(
+                    onTap: () => onEdit(block, index),
+                    child: AnimatedSlide(
+                      //offset: const Offset(1, 0),
+                      offset: Offset.zero, // 👈 Temporarily disable slide-in
+                      duration: Duration(milliseconds: 250 + index * 100),
+                      curve: Curves.easeOut,
+                      child: ScheduleBlock(
+                        title: block.label,
+                        duration: block.duration,
+                        taskType: block.taskType,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: blocks.length,
+            ),
+          ),
+      ],
+    );
+  }
+}

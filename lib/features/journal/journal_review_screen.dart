@@ -1,15 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-import 'package:audioplayers/audioplayers.dart';
-
-import 'package:humble_time_app/utils/export_import_service.dart';
-import 'package:humble_time_app/services/voice_service.dart';
-
 import 'package:go_router/go_router.dart';
-
-// ... [imports remain unchanged]
+import 'package:humble_time_app/models/journal_entry.dart';
+import 'package:humble_time_app/services/journal_service.dart';
+import 'package:humble_time_app/services/voice_service.dart';
 
 class JournalReviewScreen extends StatefulWidget {
   const JournalReviewScreen({super.key});
@@ -19,7 +13,7 @@ class JournalReviewScreen extends StatefulWidget {
 }
 
 class _JournalReviewScreenState extends State<JournalReviewScreen> {
-  List<Map<String, dynamic>> _entries = [];
+  List<JournalEntry> _entries = [];
 
   @override
   void initState() {
@@ -27,140 +21,79 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
     _loadEntries();
     Future.microtask(() {
       if (mounted) {
-        VoiceService.speakIfEnabled("Reviewing your saved reflections.");
+        VoiceService.speakIfEnabled("Reviewing your journal entries.");
       }
     });
   }
 
   Future<void> _loadEntries() async {
-    final prefs = await SharedPreferences.getInstance();
-    final stored = prefs.getStringList('journalEntries') ?? [];
-
-    if (!mounted) return;
-    setState(() {
-      _entries = stored.map((e) => jsonDecode(e)).cast<Map<String, dynamic>>().toList();
-    });
-  }
-
-  Future<void> _playVoiceMemo(String path) async {
-    final player = AudioPlayer();
-    await player.play(DeviceFileSource(path));
-    if (mounted) {
-      VoiceService.speakIfEnabled("Playing voice memo.");
-    }
-  }
-
-  Future<void> _exportEntries() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final file = await ExportImportService.exportEntriesToJson(_entries);
-    if (!mounted) return;
-    messenger.showSnackBar(SnackBar(content: Text('Exported to ${file.path}')));
-  }
-
-  Future<void> _importEntries() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final imported = await ExportImportService.importEntriesFromJson();
-    if (imported == null) return;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(
-      'journalEntries',
-      imported.map((e) => jsonEncode(e)).toList(),
-    );
-
-    if (!mounted) return;
-    setState(() => _entries = imported);
-    VoiceService.speakIfEnabled("Imported journal entries.");
-    messenger.showSnackBar(const SnackBar(content: Text('Journal entries imported')));
-  }
-
-  Widget _buildEntriesList() {
-    if (_entries.isEmpty) {
-      return const Center(child: Text('No journal entries found'));
-    }
-
-    return ListView.builder(
-      itemCount: _entries.length,
-      itemBuilder: (context, index) {
-        final entry = _entries[index];
-        final formattedDate = DateFormat.yMMMd().add_jm().format(
-          DateTime.parse(entry['timestamp']),
-        );
-        final voicePath = entry['voiceMemoPath'];
-
-        return Semantics(
-          label: 'Entry with mood ${entry['mood']}, saved on $formattedDate',
-          child: Card(
-            margin: const EdgeInsets.all(8),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    entry['text'] ?? '',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Mood: ${entry['mood']}",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  Text(
-                    "🕒 $formattedDate",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  if (voicePath != null && voicePath.isNotEmpty)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        icon: const Icon(Icons.play_arrow),
-                        tooltip: 'Play Voice Memo',
-                        onPressed: () => _playVoiceMemo(voicePath),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    await JournalService().init();
+    final entries = JournalService().getAllEntries();
+    setState(() => _entries = entries);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Wrap(
+    return Scaffold(
+      appBar: AppBar(title: const Text("Journal Review")),
+      body: Column(
+        children: [
+          Wrap(
             spacing: 12,
             runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
               ElevatedButton.icon(
                 icon: const Icon(Icons.upload),
-                label: const Text("Export to JSON"),
-                onPressed: _exportEntries,
+                label: const Text("Export"),
+                onPressed: () {
+                  // TODO: Add export logic
+                },
               ),
               ElevatedButton.icon(
                 icon: const Icon(Icons.download),
-                label: const Text("Import from JSON"),
-                onPressed: _importEntries,
+                label: const Text("Import"),
+                onPressed: () {
+                  // TODO: Add import logic
+                },
               ),
               ElevatedButton.icon(
                 icon: const Icon(Icons.insights),
-                label: const Text('View Reflection History'),
+                label: const Text("History"),
                 onPressed: () => context.go('/reflection-history'),
               ),
             ],
           ),
-        ),
-        const Divider(),
-        Expanded(child: _buildEntriesList()),
-      ],
+          const Divider(),
+          Expanded(
+            child: _entries.isEmpty
+                ? const Center(child: Text("No journal entries found"))
+                : ListView.builder(
+              itemCount: _entries.length,
+              itemBuilder: (context, index) {
+                final entry = _entries[index];
+                final formattedDate = DateFormat.yMMMd().add_jm().format(entry.timestamp);
+
+                return Card(
+                  margin: const EdgeInsets.all(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(entry.reflection ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                        const SizedBox(height: 8),
+                        Text("Mood: ${entry.moodLabel ?? 'Unknown'}", style: Theme.of(context).textTheme.bodyMedium),
+                        Text("🕒 $formattedDate", style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
-

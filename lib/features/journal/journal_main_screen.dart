@@ -8,9 +8,11 @@ import 'package:humble_time_app/widgets/voice_recorder_button.dart';
 import 'package:humble_time_app/widgets/transcription_display.dart';
 import 'package:humble_time_app/widgets/mood_tag_selector.dart';
 
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart'; // ✅ New import for formatted timestamp
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:humble_time_app/services/journal_service.dart';
+import 'package:humble_time_app/models/journal_entry.dart';
 
 class JournalMainScreen extends StatefulWidget {
   const JournalMainScreen({super.key});
@@ -40,33 +42,50 @@ class _JournalMainScreenState extends State<JournalMainScreen> {
   }
 
   Future<void> _startListening() async {
-    bool available = await _speech.initialize();
+    final status = await Permission.microphone.request();
+
+    if (!mounted) return;
+    if (status != PermissionStatus.granted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Microphone permission denied")),
+      );
+      return;
+    }
+
+    final available = await _speech.initialize();
+    if (!mounted) return;
+
     if (available) {
       setState(() => _isListening = true);
       _speech.listen(
         onResult: (result) {
+          if (!mounted) return;
           setState(() => _transcribedText = result.recognizedWords);
         },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Speech recognition not available")),
       );
     }
   }
 
   Future<void> _stopListening() async {
     await _speech.stop();
+    if (!mounted) return;
     setState(() => _isListening = false);
   }
 
   Future<void> _saveReflection() async {
-    final entry = {
-      'text': _transcribedText,
-      'mood': _mood,
-      'timestamp': DateTime.now().toIso8601String(),
-    };
+    final entry = JournalEntry(
+      timestamp: DateTime.now(),
+      moodLabel: _mood,
+      reflection: _transcribedText,
+      blockTags: [],
+    );
 
-    final prefs = await SharedPreferences.getInstance();
-    final existing = prefs.getStringList('journalEntries') ?? [];
-    existing.add(jsonEncode(entry));
-    await prefs.setStringList('journalEntries', existing);
+    await JournalService().init();
+    await JournalService().saveEntry(entry);
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -80,57 +99,75 @@ class _JournalMainScreenState extends State<JournalMainScreen> {
   }
 
   void _navigateToReview() {
-    //context.push('/journal-review');
-    context.go('/journal-review'); // ✅ Triggers ShellRoute with BottomNavBar
+    context.go('/journal-review');
   }
 
   @override
   Widget build(BuildContext context) {
     final formattedTime =
-        DateFormat.yMMMd().add_jm().format(DateTime.now()); // 🕒 Prettified time
+    DateFormat.yMMMd().add_jm().format(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(title: const Text("Prompted Journaling")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            PromptBubble(onReplay: _speakPrompt),
-            const SizedBox(height: 20),
-            VoiceRecorderButton(
-              isListening: _isListening,
-              onStart: _startListening,
-              onStop: _stopListening,
-            ),
-            const SizedBox(height: 20),
-            TranscriptionDisplay(text: _transcribedText),
-            const SizedBox(height: 20),
-            MoodTagSelector(
-              selectedMood: _mood,
-              onMoodChanged: (value) =>
-                  setState(() => _mood = value ?? 'Neutral'),
-            ),
-            const SizedBox(height: 10),
-            Text("🕒 $formattedTime"), // 🕒 Human-friendly timestamp
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: _saveReflection,
-                  child: const Text("Save Reflection"),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      PromptBubble(onReplay: _speakPrompt),
+                      const SizedBox(height: 20),
+                      VoiceRecorderButton(
+                        isListening: _isListening,
+                        onStart: _startListening,
+                        onStop: _stopListening,
+                      ),
+                      const SizedBox(height: 20),
+                      TranscriptionDisplay(text: _transcribedText),
+                      const SizedBox(height: 20),
+                      MoodTagSelector(
+                        selectedMood: _mood,
+                        onMoodChanged: (value) =>
+                            setState(() => _mood = value ?? 'Neutral'),
+                      ),
+                      const SizedBox(height: 10),
+                      Text("🕒 $formattedTime"),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _saveReflection,
+                              child: const Text("Save"),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: _navigateToReview,
+                              child: const Text("Review"),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => context.go('/'),
+                              child: const Text("Home"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                OutlinedButton(
-                  onPressed: _navigateToReview,
-                  child: const Text("Review Entries"),
-                ),
-                OutlinedButton(
-                  onPressed: () => context.go('/'),
-                  child: const Text("Go Home"),
-                ),
-              ],
-            ),
-          ],
+              ),
+            );
+          },
         ),
       ),
     );

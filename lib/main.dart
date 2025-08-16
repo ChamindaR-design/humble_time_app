@@ -21,9 +21,13 @@ import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 
 import 'package:flutter/foundation.dart';
 
-//Actuals Screens
+// Actuals Screens
 import 'package:humble_time_app/models/actuals_entry.dart';
 import 'package:humble_time_app/features/actuals/services/actuals_store.dart';
+
+// Journal Entry
+import 'package:humble_time_app/models/journal_entry.dart';
+import 'package:humble_time_app/services/journal_service.dart';
 
 /// Provider for time log entries (example demo data)
 final logEntriesProvider = Provider<List<TimeLogEntry>>((ref) => [
@@ -77,6 +81,10 @@ void main() async {
 
   // ✅ Register BlockReflection adapter (already present)
   await HiveService.init();
+
+  // ✅ Register JournalEntry adapter
+  Hive.registerAdapter(JournalEntryAdapter());    // ✅ Add this line
+  await JournalService().init(); // ✅ Optional: opens JournalEntry box
 
   // ✅ Load persisted actuals into store
   await ActualsStore.instance.init();

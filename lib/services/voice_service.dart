@@ -53,6 +53,7 @@ class VoiceService {
       await _tts.setVolume(1.0);
       await _tts.awaitSpeakCompletion(true); // 🔊 Full delivery before reset
       await applyVoiceProfile(VoiceProfile.calm);
+      await _tts.setLanguage('en-US'); // Force English regardless of locale
 
       _log('VoiceService: Initialized with language "$preferredLanguage"');
     } catch (e) {
@@ -64,17 +65,17 @@ class VoiceService {
   static Future<void> speak(String text) async {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
-    // 🧯 Windows debug mode protection
+/*    // 🧯 Windows debug mode protection
     if (Platform.isWindows && kDebugMode) {
       _log('VoiceService: Skipping TTS in Windows debug mode');
       return;
-    }
+    }*/
 
-   // 🧯 Safe Windows debug mode protection
+/*   // 🧯 Safe Windows debug mode protection
     if (!kIsWeb && Platform.isWindows && kDebugMode) {
       _log('VoiceService: Skipping TTS in Windows debug mode');
       return;
-    }
+    }*/
 
     final now = DateTime.now();
     if (now.difference(_lastSpokenAt) < const Duration(milliseconds: 500)) {
@@ -162,9 +163,15 @@ class VoiceService {
       final voices = await _tts.getLanguages ?? [];
       _log('Available TTS languages: ${voices.join(', ')}');
 
+      /*final fallbackLang = voices.contains(requestedLang)
+          ? requestedLang
+          : (voices.contains('en-US') ? 'en-US' : voices.first);*/
+
       final fallbackLang = voices.contains(requestedLang)
           ? requestedLang
-          : (voices.contains('en-US') ? 'en-US' : voices.first);
+          : (voices.contains('en-US') ? 'en-US'
+          : voices.contains('eng') ? 'eng'
+          : voices.first);
 
       await _tts.setLanguage(fallbackLang);
       _log('VoiceService: Language updated to "$fallbackLang"');

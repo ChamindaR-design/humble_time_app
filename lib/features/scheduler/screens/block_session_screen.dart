@@ -143,7 +143,7 @@ class _BlockSessionScreenState extends State<BlockSessionScreen> {
           ),
         ),
         bottomNavigationBar: const BottomNavBar(), // ✅ Optional
-        body: Center(
+        /*body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -167,6 +167,48 @@ class _BlockSessionScreenState extends State<BlockSessionScreen> {
                 onPressed: _togglePause,
               ),
             ],
+          ),
+        ),*/
+        // Fixing RenderFlex overflowed by 100 pixels on the bottom
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Semantics(
+                          label: 'Time remaining: $minutes minutes and $seconds seconds',
+                          child: Text(
+                            '$minutes:$seconds',
+                            style: Theme.of(context).textTheme.displayLarge,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          _getAffirmation(widget.block.taskType),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                        const Spacer(),
+                        ElevatedButton.icon(
+                          icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),
+                          label: Text(isPaused ? 'Resume' : 'Pause'),
+                          onPressed: _togglePause,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

@@ -28,7 +28,7 @@ class ActualsScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
-      body: Padding(
+      /*body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -50,6 +50,30 @@ class ActualsScreen extends StatelessWidget {
             Expanded(
               child: ActualsList(store: store),
             ),
+          ],
+        ),
+      ),*/
+      //Fixing RenderFlex overflowed by 100 pixels on the bottom
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Semantics(
+              label: 'Log what you have completed so far',
+              child: Text(
+                "Log what you've completed so far.",
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+            const SizedBox(height: 12),
+            EntryForm(
+              onSaved: (text) async {
+                await store.addEntry(text);
+              },
+            ),
+            const SizedBox(height: 16),
+            ActualsList(store: store), // ✅ No Expanded
           ],
         ),
       ),

@@ -12,7 +12,9 @@ import 'package:humble_time_app/features/planner/time_mosaic_screen.dart';
 import 'package:humble_time_app/features/schedule/schedule_screen.dart';
 import 'package:humble_time_app/features/mood/mood_screen.dart';
 import 'package:humble_time_app/features/settings/settings_screen.dart';
-import 'package:humble_time_app/features/pacing/pacing_screen.dart';
+
+// 🧭 Pacing route uses pacing_main_screen.dart (not session/pacing_block_screen.dart)
+import 'package:humble_time_app/features/pacing/pacing_main_screen.dart';
 
 // Journal screens (using import aliases)
 import 'package:humble_time_app/features/journal/journal_main_screen.dart' as main;

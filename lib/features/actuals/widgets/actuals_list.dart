@@ -18,28 +18,32 @@ class ActualsList extends StatelessWidget {
         if (entries.isEmpty) {
           return const _EmptyState();
         }
-        return ListView.separated(
-          itemCount: entries.length,
-          separatorBuilder: (_, _) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final e = entries[index];
-            return ListTile(
-              leading: const Icon(Icons.fact_check),
-              title: Text(e.text),
-              subtitle: Text(_formatTime(e.createdAt)),
-              dense: true,
-            );
-          },
+
+        final screenHeight = MediaQuery.of(context).size.height;
+
+        return SizedBox(
+          height: screenHeight * 0.4, // ✅ Constrain height to 40% of screen
+          child: ListView.separated(
+            itemCount: entries.length,
+            separatorBuilder: (_, _) => const Divider(height: 1),
+            itemBuilder: (context, index) {
+              final e = entries[index];
+              return ListTile(
+                leading: const Icon(Icons.fact_check),
+                title: Text(e.text),
+                subtitle: Text(_formatTime(e.createdAt)),
+                dense: true,
+              );
+            },
+          ),
         );
       },
     );
   }
 
   String _formatTime(DateTime dt) {
-    // Keep it dependency-light; simple, readable timestamp.
     String two(int n) => n.toString().padLeft(2, '0');
     final d = dt.toLocal();
-    //final two = (int n) => n.toString().padLeft(2, '0');
     return "${d.year}-${two(d.month)}-${two(d.day)} ${two(d.hour)}:${two(d.minute)}";
   }
 }

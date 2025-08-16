@@ -64,11 +64,11 @@ class VoiceService {
   static Future<void> speak(String text) async {
     if (!isVoiceEnabled || _isSpeaking || text.trim().isEmpty) return;
 
-/*    // 🧯 Windows debug mode protection
+    // 🧯 Windows debug mode protection
     if (Platform.isWindows && kDebugMode) {
       _log('VoiceService: Skipping TTS in Windows debug mode');
       return;
-    }*/
+    }
 
    // 🧯 Safe Windows debug mode protection
     if (!kIsWeb && Platform.isWindows && kDebugMode) {

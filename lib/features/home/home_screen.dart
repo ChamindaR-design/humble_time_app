@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
           speakOnBuild: false,
         ),
       ),
-      body: Stack(
+      /*body: Stack(
         children: [
           Padding(
             padding: const EdgeInsets.all(20),
@@ -37,7 +37,26 @@ class HomeScreen extends StatelessWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.history),
                   label: Text(local.logHistory),
-                  onPressed: () => context.go('/log'),
+                  onPressed: () => context.go('/log'),*/
+        //Fixing RenderFlex overflowed by 100 pixels on the bottom
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  NarratedText(
+                    text: 'What would you like to do next?',
+                    baseFontSize: 18,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                    speakOnBuild: true,
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.history),
+                    label: Text(local.logHistory),
+                    onPressed: () => context.go('/log'),          
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.check_circle),

@@ -1,4 +1,6 @@
 // Screen for breathing and mindfulness block pacing.
+// ✅ This is the primary pacing screen used in production.
+// Replaces the older Riverpod-based version from features/session.
 
 import 'package:flutter/material.dart';
 import '../../services/voice_service.dart';

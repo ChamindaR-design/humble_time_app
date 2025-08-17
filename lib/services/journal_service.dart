@@ -5,6 +5,8 @@ import 'package:humble_time_app/models/journal_entry.dart';
 //import 'package:humble_time_app/utils/date_time_format.dart';
 import 'package:humble_time_app/utils/date_time_format.dart' as dtf;
 
+//import 'package:path_provider/path_provider.dart'; // ❌ No longer needed here
+
 class JournalService {
   static const String _boxName = 'journal_entries';
 
@@ -21,9 +23,18 @@ class JournalService {
     ),
   );
 
+  /*Future<void> init() async {
+    if (!Hive.isBoxOpen(_boxName)) {
+      final appDocDir = await getApplicationDocumentsDirectory();
+      Hive.init(appDocDir.path); // ✅ Correct place for Hive path setup
+      Hive.registerAdapter(JournalEntryAdapter());
+      await Hive.openBox<JournalEntry>(_boxName);
+    }
+  }*/
+
   Future<void> init() async {
     if (!Hive.isBoxOpen(_boxName)) {
-      await Hive.openBox<JournalEntry>(_boxName);
+      await Hive.openBox<JournalEntry>(_boxName); // ✅ Hive already initialized in main.dart
     }
   }
 

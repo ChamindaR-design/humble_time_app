@@ -147,6 +147,15 @@ class SettingsScreen extends ConsumerWidget {
             },
           ),
 
+          // Keep this section in the main list, always visible:
+          const Divider(height: 40),
+          Text('Language', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Semantics(
+            label: 'Language picker for app localization',
+            child: const LanguagePicker(),
+          ),
+
           //if (!bool.fromEnvironment('dart.vm.product')) _buildDevTools(context),
           if (!kReleaseMode) _buildDevTools(context),
         ],

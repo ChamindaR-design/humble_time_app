@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:humble_time_app/models/journal_entry.dart';
 import 'package:humble_time_app/services/journal_service.dart';
 import 'package:humble_time_app/services/voice_service.dart';
@@ -27,7 +28,7 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
   }
 
   Future<void> _loadEntries() async {
-    await JournalService().init();
+    await JournalService().init(); // Hive init happens here
     final entries = JournalService().getAllEntries();
     setState(() => _entries = entries);
   }
@@ -69,28 +70,28 @@ class _JournalReviewScreenState extends State<JournalReviewScreen> {
             child: _entries.isEmpty
                 ? const Center(child: Text("No journal entries found"))
                 : ListView.builder(
-              itemCount: _entries.length,
-              itemBuilder: (context, index) {
-                final entry = _entries[index];
-                final formattedDate = DateFormat.yMMMd().add_jm().format(entry.timestamp);
+                    itemCount: _entries.length,
+                    itemBuilder: (context, index) {
+                      final entry = _entries[index];
+                      final formattedDate = DateFormat.yMMMd().add_jm().format(entry.timestamp);
 
-                return Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(entry.reflection ?? '', style: Theme.of(context).textTheme.bodyLarge),
-                        const SizedBox(height: 8),
-                        Text("Mood: ${entry.moodLabel ?? 'Unknown'}", style: Theme.of(context).textTheme.bodyMedium),
-                        Text("🕒 $formattedDate", style: Theme.of(context).textTheme.bodySmall),
-                      ],
-                    ),
+                      return Card(
+                        margin: const EdgeInsets.all(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(entry.reflection ?? '', style: Theme.of(context).textTheme.bodyLarge),
+                              const SizedBox(height: 8),
+                              Text("Mood: ${entry.moodLabel ?? 'Unknown'}", style: Theme.of(context).textTheme.bodyMedium),
+                              Text("🕒 $formattedDate", style: Theme.of(context).textTheme.bodySmall),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),

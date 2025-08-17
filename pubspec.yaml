@@ -26,6 +26,7 @@ dependencies:
   speech_to_text_platform_interface: ^2.2.0
   shared_preferences: ^2.2.2
   path_provider: ^2.0.12
+  #path_provider: ^2.0.11
   file_picker: ^10.2.1
   #audioplayers: ^1.1.1
   #audioplayers: ^4.1.0 

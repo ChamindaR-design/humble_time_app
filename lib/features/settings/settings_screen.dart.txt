@@ -7,7 +7,11 @@ import 'package:humble_time_app/core/providers/user_settings_provider.dart';
 import 'package:humble_time_app/services/hive_service.dart';
 import 'package:humble_time_app/utils/export_import_service.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
+import 'package:humble_time_app/core/themes/app_theme.dart';
+import 'package:humble_time_app/widgets/language_picker.dart';
+import 'package:humble_time_app/widgets/voice_prompt_preview.dart'; // ✅ New import
+
+import 'package:flutter/foundation.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -129,26 +133,26 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           DropdownButton<String>(
             value: settings.colorPalette,
-            items: ['Indigo Calm', 'Teal Clarity', 'Pink Kindness']
-                .map((theme) => DropdownMenuItem(
-                      value: theme,
-                      child: Text(theme),
-                    ))
-                .toList(),
-            onChanged: (val) {
-              if (val != null) {
+            items: AppTheme.availablePalettes.map((palette) {
+              return DropdownMenuItem(
+                value: palette,
+                child: AppTheme.palettePreview(palette),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              if (newValue != null) {
                 HapticFeedback.selectionClick();
-                settingsProvider.setColorPalette(val);
+                settingsProvider.setColorPalette(newValue);
               }
             },
           ),
 
-          if (!bool.fromEnvironment('dart.vm.product')) _buildDevTools(context),
+          //if (!bool.fromEnvironment('dart.vm.product')) _buildDevTools(context),
+          if (!kReleaseMode) _buildDevTools(context),
         ],
       ),
     );
   }
-
   Widget _buildDevTools(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +168,15 @@ class SettingsScreen extends ConsumerWidget {
           onPressed: () => _previewAndExport(context),
         ),
 
+        const SizedBox(height: 16),
+        Text('Language', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
+        Semantics(
+          label: 'Language picker for app localization',
+          child: const LanguagePicker(),
+        ),
+
+        const SizedBox(height: 16),
         ElevatedButton.icon(
           icon: const Icon(Icons.share),
           label: const Text('Share Reflections File'),
@@ -272,57 +284,71 @@ class SettingsScreen extends ConsumerWidget {
             }
           },
         ),
+
+        const SizedBox(height: 8),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.record_voice_over),
+          label: const Text('Preview Voice Prompts'), // ✅ New button
+          onPressed: () {
+            Navigator.push(
+              context,
+              //MaterialPageRoute(builder: (_) => const VoicePromptPreview()),
+              MaterialPageRoute(builder: (_) => VoicePromptPreview()),
+            );
+          },
+        ),
       ],
     );
   }
 
-    Future<void> _previewAndExport(BuildContext context) async {
-      final reflections = await HiveService.exportToJson();
+  Future<void> _previewAndExport(BuildContext context) async {
+    final reflections = await HiveService.exportToJson();
 
-      await showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Preview Reflections JSON'),
-          content: SingleChildScrollView(
-            child: SelectableText(reflections),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.save),
-              label: const Text('Save to File'),
-              onPressed: () async {
-                try {
-                  final file = await ExportImportService.exportReflectionsToJson(reflections);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Reflections saved to ${file.path}')),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to save: ${e.toString()}')),
-                    );
-                  }
-                }
-              },
-            ),
-          ],
+    if (!context.mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Preview Reflections JSON'),
+        content: SingleChildScrollView(
+          child: SelectableText(reflections),
         ),
-      );
-    }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            label: const Text('Save to File'),
+            onPressed: () async {
+              try {
+                final file = await ExportImportService.exportReflectionsToJson(reflections);
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Reflections saved to ${file.path}')),
+                );
+              } catch (e) {
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to save: ${e.toString()}')),
+                );
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   DropdownButton<Duration> _durationDropdown(
       Duration current, void Function(Duration) onChange) {
     return DropdownButton<Duration>(
       value: current,
       items: [
+        const Duration(minutes: 1),
         const Duration(minutes: 5),
         const Duration(minutes: 15),
         const Duration(minutes: 25),

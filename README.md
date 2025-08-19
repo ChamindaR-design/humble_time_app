@@ -109,13 +109,15 @@ _(opens in same tab — use `Ctrl+Click` to open in new tab - use `Shift+Click` 
 
 👉 [Reflection History](https://github.com/user-attachments/assets/a088403d-1e81-4588-8c09-7fbd2a45a89d)
 
+#
+
 ## 📷 Screenshots
 
-# Home
+#### Home Screen
 
 <img width="600" height="1062" alt="image" src="https://github.com/user-attachments/assets/26a541e7-3534-4033-87fa-8d35737e18fe" />
 
-# Home (continued)
+#### Home Screen (continued)
 
 <img width="600" height="1062" alt="image" src="https://github.com/user-attachments/assets/df52cca3-b257-4fa0-b2d0-f601c9cc1539" />
 
